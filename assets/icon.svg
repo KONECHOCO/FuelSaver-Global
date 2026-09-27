@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#10b981"/>
+      <stop offset="1" stop-color="#065f46"/>
+    </linearGradient>
+    <linearGradient id="tag" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fcd34d"/>
+      <stop offset="1" stop-color="#f59e0b"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#022c22" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+
+  <!-- Sfondo pieno (iOS applica da solo gli angoli arrotondati) -->
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+
+  <!-- Colonnina carburante -->
+  <g filter="url(#shadow)" fill="#ffffff">
+    <!-- corpo -->
+    <rect x="250" y="210" width="360" height="560" rx="56"/>
+    <!-- base -->
+    <rect x="210" y="740" width="440" height="80" rx="28"/>
+    <!-- tubo e pistola -->
+    <path d="M610 330 h70 a60 60 0 0 1 60 60 v250 a45 45 0 0 0 90 0 V380 l-70 -80"
+          fill="none" stroke="#ffffff" stroke-width="44" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <!-- display della colonnina -->
+  <rect x="305" y="275" width="250" height="170" rx="26" fill="#065f46"/>
+
+  <!-- Cartellino prezzo con freccia in giù (= risparmio) -->
+  <g filter="url(#shadow)">
+    <circle cx="430" cy="600" r="118" fill="url(#tag)"/>
+    <path d="M430 535 v110 M380 600 l50 55 l50 -55" fill="none" stroke="#065f46"
+          stroke-width="34" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>
