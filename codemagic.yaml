@@ -5,6 +5,13 @@ workflows:
     name: FuelSaver iOS App Store
     max_build_duration: 90
     instance_type: mac_mini_m2
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: master
+          include: true
+      cancel_previous_builds: true
     integrations:
       app_store_connect: Ikonet Solutions
     environment:
