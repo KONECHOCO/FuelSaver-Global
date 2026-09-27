@@ -16,8 +16,10 @@ workflows:
       app_store_connect: Ikonet Solutions
     environment:
       ios_signing:
-        distribution_type: app_store
-        bundle_identifier: com.ikonet.fuelsaver
+        provisioning_profiles:
+          - fuelsaver_appstore
+        certificates:
+          - ithelpdesk_distribution_20260916
       vars:
         XCODE_PROJECT: ios/App/App.xcodeproj
         XCODE_SCHEME: App
