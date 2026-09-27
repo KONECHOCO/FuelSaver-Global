@@ -13,7 +13,7 @@ import PremiumGateModal from './components/PremiumGateModal';
 
 import { translations } from './i18n/translations';
 import { fetchStations } from './services/fuelDataService';
-import { getPrice } from './utils/price';
+import { getPrice, isStale } from './utils/price';
 import { initMonetization, trackAdAction, isFeatureUnlocked } from './services/monetization';
 
 // Contributi dell'utente (segnalazioni prezzo, recensioni) salvati sul dispositivo.
@@ -211,12 +211,15 @@ export default function App() {
     const values = list.map(st => getPrice(st, selectedFuelType, selectedServiceMode)).filter(v => v != null).sort((a, b) => a - b);
     const median = values.length ? values[Math.floor(values.length / 2)] : null;
     const isSuspect = val => val != null && median != null && values.length >= 5 && val < median * 0.85;
+    // Un prezzo fermo da giorni non è affidabile: non può vincere il badge né stare in cima
+    const isOld = st => isStale(st.prices[selectedFuelType]?.updatedAt || st.updatedAt);
 
     // Min/max del set filtrato per i badge "più conveniente" / "più caro"
     let minPrice = Infinity;
     let maxPrice = -Infinity;
-    for (const val of values) {
-      if (isSuspect(val)) continue;
+    for (const st of list) {
+      const val = getPrice(st, selectedFuelType, selectedServiceMode);
+      if (val == null || isSuspect(val) || isOld(st)) continue;
       if (val < minPrice) minPrice = val;
       if (val > maxPrice) maxPrice = val;
     }
@@ -227,6 +230,7 @@ export default function App() {
         ...st,
         currentPrice: val,
         priceSuspect: isSuspect(val),
+        priceOld: isOld(st),
         isCheapest: val != null && val === minPrice,
         isExpensive: val != null && val === maxPrice && maxPrice !== minPrice
       };
@@ -237,6 +241,7 @@ export default function App() {
       if (sortBy === 'distance') return a.distanceKm - b.distanceKm;
       if (sortBy === 'rating') return (b.rating ?? -1) - (a.rating ?? -1) || a.distanceKm - b.distanceKm;
       if (a.priceSuspect !== b.priceSuspect) return a.priceSuspect ? 1 : -1;
+      if (a.priceOld !== b.priceOld) return a.priceOld ? 1 : -1;
       return (a.currentPrice ?? Infinity) - (b.currentPrice ?? Infinity) || a.distanceKm - b.distanceKm;
     });
 

@@ -33,7 +33,10 @@ export default function TripCalculatorModal({ isOpen, onClose, stations, current
   const handleCalculate = async (e) => {
     e.preventDefault();
 
-    const priced = stations.filter(st => getPrice(st, fuelType, 'self') != null);
+    const withPrice = stations.filter(st => getPrice(st, fuelType, 'self') != null);
+    // Esclusi prezzi vecchi o anomali, a meno che non ci sia altro
+    const reliable = withPrice.filter(st => !st.priceOld && !st.priceSuspect);
+    const priced = reliable.length ? reliable : withPrice;
     if (!priced.length) {
       alert(t.data.noStations);
       return;

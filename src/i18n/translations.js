@@ -31,7 +31,7 @@ export const translations = {
       noRating: "Nuovo",
       error: "Servizio dati non raggiungibile. Riprova tra poco."
     },
-    appName: "FuelSaver Global",
+    appName: "FuelSaver",
     appSubtitle: "Trova il benzinaio con il prezzo migliore vicino a te",
     searchPlaceholder: "Cerca città, indirizzo o cap...",
     useMyLocation: "La mia posizione",
@@ -110,15 +110,15 @@ export const translations = {
     },
     tripCalculator: {
       title: "Calcolatore Costo Viaggio & Rotta",
-      subtitle: "Trova il benzinaio più conveniente lungo il tuo percorso ed evita il caro autostrada!",
+      subtitle: "Trova il distributore più conveniente nella tua zona e stima il costo del viaggio.",
       origin: "Città di partenza",
       destination: "Città di arrivo",
       consumption: "Consumo medio auto (L/100km)",
       calculateBtn: "Calcola Percorso & Benzinaio Migliore",
       resultTitle: "Risultato del calcolo",
       estimatedCost: "Costo totale stimato carburante",
-      recommendedStation: "Benzinaio consigliato sul percorso",
-      savingsMsg: "Risparmi fino a"
+      recommendedStation: "Distributore più conveniente nella tua zona",
+      savingsMsg: "Risparmi rispetto alla media della zona"
     },
     trends: {
       title: "Prezzi nella tua zona",
@@ -174,7 +174,7 @@ export const translations = {
       noRating: "New",
       error: "Price service unreachable. Please try again shortly."
     },
-    appName: "FuelSaver Global",
+    appName: "FuelSaver",
     appSubtitle: "Find the best fuel prices near you and save money",
     searchPlaceholder: "Search city, address or zip code...",
     useMyLocation: "My Location",
@@ -253,15 +253,15 @@ export const translations = {
     },
     tripCalculator: {
       title: "Trip Cost & Fuel Route Planner",
-      subtitle: "Find the best gas station on your route and avoid expensive highway prices!",
+      subtitle: "Find the cheapest station in your area and estimate your trip cost.",
       origin: "Origin City",
       destination: "Destination City",
       consumption: "Avg Consumption (L/100km or MPG)",
       calculateBtn: "Calculate Route & Best Fuel Station",
       resultTitle: "Calculation Summary",
       estimatedCost: "Total Estimated Fuel Cost",
-      recommendedStation: "Recommended Stop On Route",
-      savingsMsg: "Save up to"
+      recommendedStation: "Cheapest station in your area",
+      savingsMsg: "You save vs. the area average"
     },
     trends: {
       title: "Prices in your area",
@@ -317,7 +317,7 @@ export const translations = {
       noRating: "Nuevo",
       error: "Servicio de precios no disponible. Inténtalo de nuevo."
     },
-    appName: "FuelSaver Global",
+    appName: "FuelSaver",
     appSubtitle: "Encuentra la gasolinera más barata cerca de ti",
     searchPlaceholder: "Buscar ciudad, dirección...",
     useMyLocation: "Mi Ubicación",
@@ -396,15 +396,15 @@ export const translations = {
     },
     tripCalculator: {
       title: "Calculadora de Viaje y Ruta",
-      subtitle: "¡Encuentra la gasolinera más barata en tu ruta!",
+      subtitle: "Encuentra la gasolinera más barata de tu zona y estima el coste del viaje.",
       origin: "Ciudad de origen",
       destination: "Ciudad de destino",
       consumption: "Consumo medio (L/100km)",
       calculateBtn: "Calcular Ruta y Mejor Gasolinera",
       resultTitle: "Resumen del cálculo",
       estimatedCost: "Coste total estimado",
-      recommendedStation: "Gasolinera recomendada en ruta",
-      savingsMsg: "Ahorra hasta"
+      recommendedStation: "Gasolinera más barata de tu zona",
+      savingsMsg: "Ahorras frente a la media de la zona"
     },
     trends: {
       title: "Precios en tu zona",
@@ -460,7 +460,7 @@ export const translations = {
       noRating: "Nouveau",
       error: "Service de prix injoignable. Réessayez plus tard."
     },
-    appName: "FuelSaver Global",
+    appName: "FuelSaver",
     appSubtitle: "Trouvez la station-service la moins chère près de chez vous",
     searchPlaceholder: "Rechercher une ville, adresse...",
     useMyLocation: "Ma Position",
@@ -539,15 +539,15 @@ export const translations = {
     },
     tripCalculator: {
       title: "Calculateur de Trajet & Carburant",
-      subtitle: "Trouvez la station la moins chère sur votre itinéraire !",
+      subtitle: "Trouvez la station la moins chère de votre zone et estimez le coût du trajet.",
       origin: "Ville de départ",
       destination: "Ville d'arrivée",
       consumption: "Consommation moyenne (L/100km)",
       calculateBtn: "Calculer l'Itinéraire",
       resultTitle: "Résultat du calcul",
       estimatedCost: "Coût total estimé",
-      recommendedStation: "Station recommandée sur la route",
-      savingsMsg: "Économisez jusqu'à"
+      recommendedStation: "Station la moins chère de votre zone",
+      savingsMsg: "Vous économisez par rapport à la moyenne"
     },
     trends: {
       title: "Prix dans votre zone",
@@ -603,7 +603,7 @@ export const translations = {
       noRating: "Neu",
       error: "Preisdienst nicht erreichbar. Bitte später erneut versuchen."
     },
-    appName: "FuelSaver Global",
+    appName: "FuelSaver",
     appSubtitle: "Finde die günstigste Tankstelle in deiner Nähe",
     searchPlaceholder: "Stadt, Adresse oder PLZ suchen...",
     useMyLocation: "Mein Standort",
@@ -682,15 +682,15 @@ export const translations = {
     },
     tripCalculator: {
       title: "Fahrtkosten & Routen-Planer",
-      subtitle: "Finde die günstigste Tankstelle auf deiner Route!",
+      subtitle: "Finde die günstigste Tankstelle in deiner Umgebung und schätze die Reisekosten.",
       origin: "Startstadt",
       destination: "Zielstadt",
       consumption: "Durchschnittsverbrauch (L/100km)",
       calculateBtn: "Route & Tankstelle Berechnen",
       resultTitle: "Kostenübersicht",
       estimatedCost: "Geschätzte Gesamtkosten",
-      recommendedStation: "Empfohlene Tankstelle auf der Route",
-      savingsMsg: "Ersparnis bis zu"
+      recommendedStation: "Günstigste Tankstelle in deiner Umgebung",
+      savingsMsg: "Ersparnis gegenüber dem Durchschnitt"
     },
     trends: {
       title: "Preise in deiner Umgebung",
