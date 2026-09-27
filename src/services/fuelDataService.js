@@ -1,55 +1,29 @@
 /**
- * Service per il recupero dei LISTINI PREZZI REALI UFFICIALI
+ * Service per la comunicazione con il Backend MIMIT Sync Service
  * 
- * 🇮🇹 ITALIA: Ministero delle Imprese e del Made in Italy (MIMIT) - Osservaprezzi Carburanti
- * 🇩🇪 GERMANIA: Tankerkoenig API v2
- * 🇪🇸 SPAGNA: MITECO Geoportal REST API
- * 🇫🇷 FRANCIA: OpenData Prix-Carburants
+ * 🇮🇹 ITALIA: Ministero delle Imprese e del Made in Italy (MIMIT)
+ * 🌐 BACKEND: Server Node.js / Express con Cron Job ogni 15 minuti su http://localhost:3001
  */
 
-// URL Ufficiali Open Data MIMIT Italia
-const MIMIT_PLANTS_URL = "https://www.mimit.gov.it/images/exportopen-data/anagrafica_impianti_attivi.csv";
-const MIMIT_PRICES_URL = "https://www.mimit.gov.it/images/exportopen-data/prezzo_alle_vendite.csv";
+const BACKEND_API_URL = "http://localhost:3001/api/stations";
 
 /**
- * Recupera i listini reali dal Ministero o dai servizi API aperti
+ * Tenta di recuperare i distributori ed i listini prezzi reali dal Backend MIMIT
  */
-export async function fetchRealMimitPrices(lat, lng, radiusKm = 25) {
+export async function fetchLiveBackendStations(lat, lng, radiusKm = 25) {
   try {
-    // Tentativo di fetch diretta o tramite proxy per i dati MIMIT Italia
-    const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(MIMIT_PRICES_URL);
-    const response = await fetch(proxyUrl, { signal: AbortSignal.timeout(5000) });
+    const url = `${BACKEND_API_URL}?lat=${lat}&lng=${lng}&radius=${radiusKm}`;
+    const res = await fetch(url, { signal: AbortSignal.timeout(3000) });
     
-    if (response.ok) {
-      const text = await response.text();
-      console.log("MIMIT Real Price CSV Loaded successfully");
-      // Il parser convertirebbe le righe del CSV del ministero nei listini reali per ogni impianto
-      return parseMimitCsv(text);
+    if (res.ok) {
+      const data = await res.json();
+      if (data.status === 'ok' && Array.isArray(data.stations)) {
+        console.log(`📡 [MIMIT API Client] Ricevute ${data.stations.length} stazioni reali dal backend MIMIT!`);
+        return data.stations;
+      }
     }
-  } catch (error) {
-    console.warn("Connessione MIMIT diretta non disponibile o bloccata da CORS. Utilizzo della fallback simulata + Open Data locale.", error);
+  } catch (err) {
+    console.warn("[MIMIT API Client] Backend locale (port 3001) in fase di avvio o offline. Utilizzo della modalità locale con Open Data MIMIT.", err.message);
   }
-  
   return null;
-}
-
-function parseMimitCsv(csvText) {
-  const lines = csvText.split('\n');
-  const priceMap = {};
-  
-  // Salta intestazione
-  for (let i = 2; i < Math.min(lines.length, 2000); i++) {
-    const cols = lines[i].split(';');
-    if (cols.length >= 5) {
-      const idImpianto = cols[0];
-      const descCarburante = cols[1];
-      const prezzo = parseFloat(cols[2].replace(',', '.'));
-      const isSelf = cols[3] === '1';
-      
-      if (!priceMap[idImpianto]) priceMap[idImpianto] = {};
-      priceMap[idImpianto][descCarburante] = { prezzo, isSelf };
-    }
-  }
-  
-  return priceMap;
 }
