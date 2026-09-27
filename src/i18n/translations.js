@@ -1,5 +1,25 @@
 export const translations = {
   it: {
+    pro: {
+      title: "FuelSaver Pro",
+      subtitle: "Un solo pagamento, per sempre. Nessun abbonamento.",
+      noAds: "Zero pubblicità: niente video, niente banner",
+      tripCalc: "Calcolatore viaggio illimitato",
+      stats: "Statistiche prezzi della zona sempre sbloccate",
+      support: "Sostieni lo sviluppo di un'app indipendente",
+      buy: "Passa a Pro – {price}",
+      restore: "Ripristina acquisti",
+      restored: "Acquisto Pro ripristinato. Grazie!",
+      notFound: "Nessun acquisto Pro trovato per questo account.",
+      owned: "Sei Pro! Grazie per il supporto 💚",
+      error: "Acquisto non completato. Riprova.",
+      webOnly: "L'acquisto è disponibile nell'app per iPhone e Android.",
+      lockedTitle: "Funzione premium",
+      lockedText: "Guarda un breve video per sbloccarla gratis per 24 ore, oppure passa a Pro.",
+      watchVideo: "Guarda un video e sblocca 24 ore",
+      videoUnavailable: "Nessun video disponibile ora. Riprova tra poco.",
+      removeAds: "Rimuovi pubblicità"
+    },
     data: {
       suspect: "Prezzo anomalo, da verificare",
       loading: "Caricamento prezzi ufficiali...",
@@ -123,6 +143,26 @@ export const translations = {
     }
   },
   en: {
+    pro: {
+      title: "FuelSaver Pro",
+      subtitle: "One payment, forever. No subscription.",
+      noAds: "Zero ads: no videos, no banners",
+      tripCalc: "Unlimited trip calculator",
+      stats: "Area price statistics always unlocked",
+      support: "Support an independent app",
+      buy: "Go Pro – {price}",
+      restore: "Restore purchases",
+      restored: "Pro purchase restored. Thank you!",
+      notFound: "No Pro purchase found for this account.",
+      owned: "You're Pro! Thanks for your support 💚",
+      error: "Purchase not completed. Please try again.",
+      webOnly: "Purchases are available in the iPhone and Android app.",
+      lockedTitle: "Premium feature",
+      lockedText: "Watch a short video to unlock it free for 24 hours, or go Pro.",
+      watchVideo: "Watch a video, unlock for 24h",
+      videoUnavailable: "No video available right now. Try again shortly.",
+      removeAds: "Remove ads"
+    },
     data: {
       suspect: "Unusual price, please verify",
       loading: "Loading official prices...",
@@ -246,6 +286,26 @@ export const translations = {
     }
   },
   es: {
+    pro: {
+      title: "FuelSaver Pro",
+      subtitle: "Un solo pago, para siempre. Sin suscripción.",
+      noAds: "Cero anuncios: sin vídeos ni banners",
+      tripCalc: "Calculadora de viaje ilimitada",
+      stats: "Estadísticas de precios de la zona siempre desbloqueadas",
+      support: "Apoya una app independiente",
+      buy: "Hazte Pro – {price}",
+      restore: "Restaurar compras",
+      restored: "Compra Pro restaurada. ¡Gracias!",
+      notFound: "No se encontró ninguna compra Pro en esta cuenta.",
+      owned: "¡Eres Pro! Gracias por tu apoyo 💚",
+      error: "Compra no completada. Inténtalo de nuevo.",
+      webOnly: "Las compras están disponibles en la app para iPhone y Android.",
+      lockedTitle: "Función premium",
+      lockedText: "Mira un vídeo corto para desbloquearla gratis 24 horas, o hazte Pro.",
+      watchVideo: "Mira un vídeo y desbloquea 24 h",
+      videoUnavailable: "No hay vídeos disponibles ahora. Inténtalo en un momento.",
+      removeAds: "Quitar anuncios"
+    },
     data: {
       suspect: "Precio anómalo, por verificar",
       loading: "Cargando precios oficiales...",
@@ -369,6 +429,26 @@ export const translations = {
     }
   },
   fr: {
+    pro: {
+      title: "FuelSaver Pro",
+      subtitle: "Un seul paiement, pour toujours. Sans abonnement.",
+      noAds: "Zéro publicité : ni vidéos, ni bannières",
+      tripCalc: "Calculateur de trajet illimité",
+      stats: "Statistiques de prix de la zone toujours débloquées",
+      support: "Soutenez une app indépendante",
+      buy: "Passer à Pro – {price}",
+      restore: "Restaurer les achats",
+      restored: "Achat Pro restauré. Merci !",
+      notFound: "Aucun achat Pro trouvé pour ce compte.",
+      owned: "Vous êtes Pro ! Merci pour votre soutien 💚",
+      error: "Achat non finalisé. Réessayez.",
+      webOnly: "Les achats sont disponibles dans l’app iPhone et Android.",
+      lockedTitle: "Fonction premium",
+      lockedText: "Regardez une courte vidéo pour la débloquer gratuitement 24 h, ou passez à Pro.",
+      watchVideo: "Regarder une vidéo, débloquer 24 h",
+      videoUnavailable: "Aucune vidéo disponible pour le moment. Réessayez bientôt.",
+      removeAds: "Supprimer les pubs"
+    },
     data: {
       suspect: "Prix inhabituel, à vérifier",
       loading: "Chargement des prix officiels...",
@@ -492,6 +572,26 @@ export const translations = {
     }
   },
   de: {
+    pro: {
+      title: "FuelSaver Pro",
+      subtitle: "Einmal zahlen, für immer. Kein Abo.",
+      noAds: "Null Werbung: keine Videos, keine Banner",
+      tripCalc: "Unbegrenzter Reiserechner",
+      stats: "Preisstatistik der Umgebung immer freigeschaltet",
+      support: "Unterstütze eine unabhängige App",
+      buy: "Pro holen – {price}",
+      restore: "Käufe wiederherstellen",
+      restored: "Pro-Kauf wiederhergestellt. Danke!",
+      notFound: "Kein Pro-Kauf für dieses Konto gefunden.",
+      owned: "Du bist Pro! Danke für deine Unterstützung 💚",
+      error: "Kauf nicht abgeschlossen. Bitte erneut versuchen.",
+      webOnly: "Käufe sind in der iPhone- und Android-App verfügbar.",
+      lockedTitle: "Premium-Funktion",
+      lockedText: "Sieh dir ein kurzes Video an und schalte sie 24 Stunden gratis frei – oder hol dir Pro.",
+      watchVideo: "Video ansehen, 24 h freischalten",
+      videoUnavailable: "Gerade kein Video verfügbar. Bitte gleich erneut versuchen.",
+      removeAds: "Werbung entfernen"
+    },
     data: {
       suspect: "Ungewöhnlicher Preis, bitte prüfen",
       loading: "Offizielle Preise werden geladen...",

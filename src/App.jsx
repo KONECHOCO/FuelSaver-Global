@@ -8,11 +8,13 @@ import TripCalculatorModal from './components/TripCalculatorModal';
 import PriceReportModal from './components/PriceReportModal';
 import ReviewModal from './components/ReviewModal';
 import PriceTrendModal from './components/PriceTrendModal';
-import MonetizationInfoModal from './components/MonetizationInfoModal';
+import ProModal from './components/ProModal';
+import PremiumGateModal from './components/PremiumGateModal';
 
 import { translations } from './i18n/translations';
 import { fetchStations } from './services/fuelDataService';
 import { getPrice } from './utils/price';
+import { initMonetization, trackAdAction, isFeatureUnlocked } from './services/monetization';
 
 // Contributi dell'utente (segnalazioni prezzo, recensioni) salvati sul dispositivo.
 // TODO: sincronizzarli su un backend con moderazione per condividerli con la community.
@@ -55,9 +57,31 @@ export default function App() {
   const [isTrendsOpen, setIsTrendsOpen] = useState(false);
   const [reportTargetStation, setReportTargetStation] = useState(null);
   const [reviewTargetStation, setReviewTargetStation] = useState(null);
-  const [isMonetizationInfoOpen, setIsMonetizationInfoOpen] = useState(false);
+  const [isProOpen, setIsProOpen] = useState(false);
+  const [gatedFeature, setGatedFeature] = useState(null);
 
   const t = translations[currentLang] || translations.en;
+
+  // Pubblicità (video all'apertura + banner) e verifica acquisto Pro
+  useEffect(() => {
+    initMonetization().catch(err => console.warn('Monetization init failed', err));
+  }, []);
+
+  // Funzioni premium: sbloccate da Pro o da un video premio (24 h)
+  const openFeature = (feature) => {
+    trackAdAction();
+    if (!isFeatureUnlocked(feature)) {
+      setGatedFeature(feature);
+      return;
+    }
+    if (feature === 'tripCalculator') setIsTripCalcOpen(true);
+    if (feature === 'priceStats') setIsTrendsOpen(true);
+  };
+
+  const handleSelectStation = (st) => {
+    if (st && st.id !== selectedStation?.id) trackAdAction();
+    setSelectedStation(st);
+  };
 
   // Scarica i distributori reali quando cambia posizione o raggio (debounce per lo slider)
   useEffect(() => {
@@ -140,6 +164,7 @@ export default function App() {
 
   // Real OpenStreetMap Nominatim Live Geocoding with addressdetails=1
   const handleSearchLocation = async (query) => {
+    trackAdAction();
     try {
       const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&q=${encodeURIComponent(query)}`);
       const data = await res.json();
@@ -262,9 +287,9 @@ export default function App() {
         userPoints={userPoints}
         onSearch={handleSearchLocation}
         onLocate={handleLocateMe}
-        onOpenTripCalc={() => setIsTripCalcOpen(true)}
-        onOpenTrends={() => setIsTrendsOpen(true)}
-        onOpenMonetizationInfo={() => setIsMonetizationInfoOpen(true)}
+        onOpenTripCalc={() => openFeature('tripCalculator')}
+        onOpenTrends={() => openFeature('priceStats')}
+        onOpenMonetizationInfo={() => setIsProOpen(true)}
       />
 
       {/* Main Grid Workspace Layout */}
@@ -276,7 +301,7 @@ export default function App() {
             userLocation={userLocation}
             stations={processedStations}
             selectedStation={selectedStation}
-            onSelectStation={setSelectedStation}
+            onSelectStation={handleSelectStation}
             selectedFuelType={selectedFuelType}
             selectedServiceMode={selectedServiceMode}
             searchRadiusKm={searchRadiusKm}
@@ -290,7 +315,7 @@ export default function App() {
             stations={processedStations}
             dataStatus={dataStatus}
             selectedStation={selectedStation}
-            onSelectStation={setSelectedStation}
+            onSelectStation={handleSelectStation}
             selectedFuelType={selectedFuelType}
             onSelectFuelType={setSelectedFuelType}
             selectedServiceMode={selectedServiceMode}
@@ -350,17 +375,32 @@ export default function App() {
         currentLang={currentLang}
       />
 
-      {/* App Store & Monetization Info Guide Modal */}
-      <MonetizationInfoModal
-        isOpen={isMonetizationInfoOpen}
-        onClose={() => setIsMonetizationInfoOpen(false)}
+      {/* FuelSaver Pro (acquisto una tantum, niente pubblicità) */}
+      <ProModal
+        isOpen={isProOpen}
+        onClose={() => setIsProOpen(false)}
+        currentLang={currentLang}
+      />
+
+      {/* Funzione premium bloccata: video premio o Pro */}
+      <PremiumGateModal
+        feature={gatedFeature}
+        onClose={() => setGatedFeature(null)}
+        onUnlocked={(feature) => {
+          setGatedFeature(null);
+          openFeature(feature);
+        }}
+        onOpenPro={() => {
+          setGatedFeature(null);
+          setIsProOpen(true);
+        }}
         currentLang={currentLang}
       />
 
       {/* AdMob Banner Simulation Footer */}
       <AdBanner
         currentLang={currentLang}
-        onUpgradePremium={() => alert("🎉 FuelSaver Premium Attivato! Annunci Rimossi e Modalità Offline Sbloccata.")}
+        onUpgradePremium={() => setIsProOpen(true)}
       />
 
     </div>

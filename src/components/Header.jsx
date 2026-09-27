@@ -1,34 +1,36 @@
 import React, { useState } from 'react';
-import { 
-  Fuel, 
-  MapPin, 
-  Globe, 
-  Search, 
-  Award, 
-  TrendingUp, 
-  Navigation, 
-  DollarSign, 
-  Smartphone,
+import {
+  Fuel,
+  MapPin,
+  Globe,
+  Search,
+  Award,
+  TrendingUp,
+  Navigation,
+  DollarSign,
   Loader2,
-  Filter
+  Filter,
+  Crown
 } from 'lucide-react';
 import { translations } from '../i18n/translations';
+import { useMonetization } from '../services/monetization';
 
-export default function Header({ 
-  currentLang, 
-  onLangChange, 
+export default function Header({
+  currentLang,
+  onLangChange,
   selectedCountry,
   onCountryChange,
-  userPoints, 
-  onSearch, 
-  onLocate, 
-  onOpenTripCalc, 
+  userPoints,
+  onSearch,
+  onLocate,
+  onOpenTripCalc,
   onOpenTrends,
   onOpenMonetizationInfo
 }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const t = translations[currentLang] || translations.en;
+  const { isPro } = useMonetization();
 
   const handleSearchSubmit = async (e) => {
     e.preventDefault();
@@ -43,7 +45,7 @@ export default function Header({
     <header className="sticky top-0 z-40 w-full glass-panel border-b border-slate-800 shadow-xl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 gap-3">
-          
+
           {/* Brand Logo & Name */}
           <div className="flex items-center gap-3 shrink-0">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-500/20">
@@ -91,7 +93,7 @@ export default function Header({
 
           {/* Right Action Icons & Filters */}
           <div className="flex items-center gap-2">
-            
+
             {/* Country Selector Filter */}
             <div className="hidden lg:flex items-center bg-slate-900 border border-slate-700 rounded-xl p-0.5">
               <Filter className="w-3.5 h-3.5 text-slate-400 ml-2 mr-1" />
@@ -133,14 +135,17 @@ export default function Header({
               <span className="text-[10px] text-slate-400 font-medium">PTS</span>
             </div>
 
-            {/* Monetization / Store Guide Info */}
-            <button
-              onClick={onOpenMonetizationInfo}
-              className="p-2 bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-xl transition-all"
-              title={t.monetization.infoModalTitle}
-            >
-              <Smartphone className="w-4 h-4 text-emerald-400" />
-            </button>
+            {/* FuelSaver Pro */}
+            {!isPro && (
+              <button
+                onClick={onOpenMonetizationInfo}
+                className="px-2.5 py-1.5 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 rounded-xl text-xs font-black flex items-center gap-1 transition-all"
+                title={t.pro.title}
+              >
+                <Crown className="w-4 h-4" />
+                <span>PRO</span>
+              </button>
+            )}
 
             {/* i18n Language Switcher */}
             <div className="relative flex items-center bg-slate-900 border border-slate-700 rounded-xl p-0.5">
