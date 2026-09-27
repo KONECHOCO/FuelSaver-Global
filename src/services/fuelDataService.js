@@ -1,29 +1,21 @@
 /**
- * Service per la comunicazione con il Backend MIMIT Sync Service
- * 
- * 🇮🇹 ITALIA: Ministero delle Imprese e del Made in Italy (MIMIT)
- * 🌐 BACKEND: Server Node.js / Express con Cron Job ogni 15 minuti su http://localhost:3001
+ * Client del backend FuelSaver: restituisce solo prezzi da fonti ufficiali
+ * (MIMIT 🇮🇹, prix-carburants.gouv.fr 🇫🇷, MITECO 🇪🇸, Tankerkönig/MTS-K 🇩🇪).
+ *
+ * In sviluppo Vite inoltra /api a http://localhost:3001 (vedi vite.config.js).
+ * Nell'app mobile (Capacitor) impostare VITE_API_URL con l'URL pubblico del backend.
  */
 
-const BACKEND_API_URL = "http://localhost:3001/api/stations";
+const API_BASE = import.meta.env.VITE_API_URL || '';
 
-/**
- * Tenta di recuperare i distributori ed i listini prezzi reali dal Backend MIMIT
- */
-export async function fetchLiveBackendStations(lat, lng, radiusKm = 25) {
-  try {
-    const url = `${BACKEND_API_URL}?lat=${lat}&lng=${lng}&radius=${radiusKm}`;
-    const res = await fetch(url, { signal: AbortSignal.timeout(3000) });
-    
-    if (res.ok) {
-      const data = await res.json();
-      if (data.status === 'ok' && Array.isArray(data.stations)) {
-        console.log(`📡 [MIMIT API Client] Ricevute ${data.stations.length} stazioni reali dal backend MIMIT!`);
-        return data.stations;
-      }
-    }
-  } catch (err) {
-    console.warn("[MIMIT API Client] Backend locale (port 3001) in fase di avvio o offline. Utilizzo della modalità locale con Open Data MIMIT.", err.message);
-  }
-  return null;
+export async function fetchStations(lat, lng, radiusKm, signal) {
+  const url = `${API_BASE}/api/stations?lat=${lat}&lng=${lng}&radius=${radiusKm}`;
+  const res = await fetch(url, { signal });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const data = await res.json();
+  return {
+    stations: data.stations || [],
+    sources: data.sources || [],
+    supported: data.supported !== false
+  };
 }

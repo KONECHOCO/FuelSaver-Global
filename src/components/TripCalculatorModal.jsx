@@ -1,6 +1,23 @@
 import React, { useState } from 'react';
 import { X, Navigation, Fuel, DollarSign, Sparkles, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { translations } from '../i18n/translations';
+import { getPrice } from '../utils/price';
+
+async function geocode(query) {
+  const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(query)}`);
+  const [first] = await res.json();
+  if (!first) throw new Error(`Località non trovata: ${query}`);
+  return { lat: parseFloat(first.lat), lng: parseFloat(first.lon) };
+}
+
+// Distanza stradale reale via OSRM (server demo pubblico: in produzione usare un'istanza propria o un servizio a pagamento)
+async function getRouteDistanceKm(origin, destination) {
+  const [a, b] = await Promise.all([geocode(origin), geocode(destination)]);
+  const res = await fetch(`https://router.project-osrm.org/route/v1/driving/${a.lng},${a.lat};${b.lng},${b.lat}?overview=false`);
+  const data = await res.json();
+  if (data.code !== 'Ok' || !data.routes?.length) throw new Error('Percorso non disponibile');
+  return data.routes[0].distance / 1000;
+}
 
 export default function TripCalculatorModal({ isOpen, onClose, stations, currentLang }) {
   const [origin, setOrigin] = useState('Roma');
@@ -13,28 +30,35 @@ export default function TripCalculatorModal({ isOpen, onClose, stations, current
 
   if (!isOpen) return null;
 
-  const handleCalculate = (e) => {
+  const handleCalculate = async (e) => {
     e.preventDefault();
-    
-    // Simple calculations for demo
-    const distanceKm = 570; 
-    const litersNeeded = (distanceKm / 100) * consumption;
-    
-    // Find cheapest station in array
-    const bestStation = stations.reduce((prev, curr) => {
-      const pPrev = prev.prices[fuelType]?.self || 99;
-      const pCurr = curr.prices[fuelType]?.self || 99;
-      return pCurr < pPrev ? curr : prev;
-    }, stations[0]);
 
-    const pricePerL = bestStation.prices[fuelType]?.self || 1.72;
+    const priced = stations.filter(st => getPrice(st, fuelType, 'self') != null);
+    if (!priced.length) {
+      alert(t.data.noStations);
+      return;
+    }
+
+    let distanceKm;
+    try {
+      distanceKm = await getRouteDistanceKm(origin, destination);
+    } catch (err) {
+      console.warn('Route calculation failed:', err);
+      alert(t.data.error);
+      return;
+    }
+    const litersNeeded = (distanceKm / 100) * consumption;
+
+    // Il più economico tra i distributori reali caricati nella zona corrente, confrontato con la media della zona
+    const bestStation = priced.reduce((best, st) =>
+      getPrice(st, fuelType, 'self') < getPrice(best, fuelType, 'self') ? st : best);
+    const pricePerL = getPrice(bestStation, fuelType, 'self');
+    const avgPrice = priced.reduce((sum, st) => sum + getPrice(st, fuelType, 'self'), 0) / priced.length;
     const totalCost = litersNeeded * pricePerL;
-    const avgHighwayPrice = pricePerL + 0.18; // Highway penalty
-    const totalHighwayCost = litersNeeded * avgHighwayPrice;
-    const savings = totalHighwayCost - totalCost;
+    const savings = litersNeeded * (avgPrice - pricePerL);
 
     setResult({
-      distanceKm,
+      distanceKm: Math.round(distanceKm),
       litersNeeded: litersNeeded.toFixed(1),
       totalCost: totalCost.toFixed(2),
       savings: savings.toFixed(2),

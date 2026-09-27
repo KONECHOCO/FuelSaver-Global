@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import Header from './components/Header';
 import AdBanner from './components/AdBanner';
 import MapComponent from './components/MapComponent';
@@ -10,43 +10,44 @@ import ReviewModal from './components/ReviewModal';
 import PriceTrendModal from './components/PriceTrendModal';
 import MonetizationInfoModal from './components/MonetizationInfoModal';
 
-import { initialStations } from './data/mockStations';
-import { generateNearbyStations } from './utils/stationGenerator';
 import { translations } from './i18n/translations';
+import { fetchStations } from './services/fuelDataService';
+import { getPrice } from './utils/price';
 
-// Haversine formula to compute exact distance in km between two lat/lng points
-function getHaversineDistance(lat1, lon1, lat2, lon2) {
-  const R = 6371; // Earth radius in km
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLon = (lon2 - lon1) * Math.PI / 180;
-  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-            Math.sin(dLon / 2) * Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return Math.round((R * c) * 10) / 10;
+// Contributi dell'utente (segnalazioni prezzo, recensioni) salvati sul dispositivo.
+// TODO: sincronizzarli su un backend con moderazione per condividerli con la community.
+const OVERLAYS_KEY = 'fuelsaver.userOverlays';
+function loadOverlays() {
+  try {
+    return JSON.parse(localStorage.getItem(OVERLAYS_KEY)) || {};
+  } catch {
+    return {};
+  }
 }
 
 export default function App() {
   const [currentLang, setCurrentLang] = useState('it');
   const [userPoints, setUserPoints] = useState(350);
   const [selectedCountry, setSelectedCountry] = useState('ALL');
-  
+
   // Location state (Default to Rome center)
-  const [userLocation, setUserLocation] = useState({ 
-    lat: 41.9028, 
+  const [userLocation, setUserLocation] = useState({
+    lat: 41.9028,
     lng: 12.4964,
     name: "Roma, Italia",
     addressDetails: { city: "Roma", postcode: "00100", county: "Roma", country_code: "it" }
   });
-  
+
   // App Filter States
   const [selectedFuelType, setSelectedFuelType] = useState('petrol');
   const [selectedServiceMode, setSelectedServiceMode] = useState('self');
   const [sortBy, setSortBy] = useState('price');
-  const [searchRadiusKm, setSearchRadiusKm] = useState(25);
-  
-  // Data State
-  const [stations, setStations] = useState(initialStations);
+  const [searchRadiusKm, setSearchRadiusKm] = useState(10);
+
+  // Data State: solo prezzi da fonti ufficiali, nessun dato generato
+  const [stations, setStations] = useState([]);
+  const [dataStatus, setDataStatus] = useState({ loading: true, error: false, supported: true, sources: [] });
+  const [overlays, setOverlays] = useState(loadOverlays);
   const [selectedStation, setSelectedStation] = useState(null);
 
   // Modals state
@@ -58,34 +59,44 @@ export default function App() {
 
   const t = translations[currentLang] || translations.en;
 
-  // Ensure gas stations ALWAYS exist near user's current location anywhere in the world!
+  // Scarica i distributori reali quando cambia posizione o raggio (debounce per lo slider)
   useEffect(() => {
-    // Check if there are stations near current userLocation
-    const nearbyCount = stations.filter(st => {
-      const dist = getHaversineDistance(userLocation.lat, userLocation.lng, st.lat, st.lng);
-      return dist <= searchRadiusKm;
-    }).length;
+    const controller = new AbortController();
+    setDataStatus(prev => ({ ...prev, loading: true, error: false }));
+    const timer = setTimeout(async () => {
+      try {
+        const res = await fetchStations(userLocation.lat, userLocation.lng, searchRadiusKm, controller.signal);
+        setStations(res.stations);
+        setDataStatus({ loading: false, error: false, supported: res.supported, sources: res.sources });
+      } catch (err) {
+        if (err.name === 'AbortError') return;
+        console.warn('Fuel data fetch failed:', err);
+        setStations([]);
+        setDataStatus({ loading: false, error: true, supported: true, sources: [] });
+      }
+    }, 350);
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
+  }, [userLocation.lat, userLocation.lng, searchRadiusKm]);
 
-    // If fewer than 2 stations exist in the area, generate dynamic local stations!
-    if (nearbyCount < 2) {
-      const newLocalStations = generateNearbyStations(userLocation.lat, userLocation.lng, userLocation);
-      setStations(prev => {
-        // Prevent duplicate IDs
-        const existingIds = new Set(prev.map(s => s.id));
-        const filteredNew = newLocalStations.filter(s => !existingIds.has(s.id));
-        return [...prev, ...filteredNew];
-      });
+  useEffect(() => {
+    try {
+      localStorage.setItem(OVERLAYS_KEY, JSON.stringify(overlays));
+    } catch {
+      // storage non disponibile (navigazione privata): i contributi restano in memoria
     }
-  }, [userLocation, searchRadiusKm]);
+  }, [overlays]);
 
   // Real Browser Geolocation Trigger with Reverse Geocoding Address Details
-  const handleLocateMe = () => {
+  const handleLocateMe = ({ silent = false } = {}) => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
           const lat = position.coords.latitude;
           const lng = position.coords.longitude;
-          
+
           let placeName = "La mia posizione GPS";
           let addressDetails = null;
 
@@ -110,14 +121,22 @@ export default function App() {
         },
         (error) => {
           console.warn('Geolocation failed or denied:', error);
-          alert('Posizione GPS non disponibile. Assicurati di aver dato i permessi al browser o digita la città nella barra di ricerca.');
+          if (!silent) alert('Posizione GPS non disponibile. Assicurati di aver dato i permessi al browser o digita la città nella barra di ricerca.');
         },
         { enableHighAccuracy: true, timeout: 8000 }
       );
-    } else {
+    } else if (!silent) {
       alert('La geolocalizzazione non è supportata dal tuo browser.');
     }
   };
+
+  // Al primo avvio proviamo subito a usare il GPS, come fanno tutte le app concorrenti
+  const didAutoLocate = useRef(false);
+  useEffect(() => {
+    if (didAutoLocate.current) return;
+    didAutoLocate.current = true;
+    handleLocateMe({ silent: true });
+  }, []);
 
   // Real OpenStreetMap Nominatim Live Geocoding with addressdetails=1
   const handleSearchLocation = async (query) => {
@@ -141,112 +160,99 @@ export default function App() {
     }
   };
 
-  // Compute processed, filtered and dynamically distance-calculated station list
+  // Unisce i dati ufficiali con i contributi locali dell'utente, poi filtra e ordina
   const processedStations = useMemo(() => {
-    // 1. Calculate dynamic Haversine distance relative to current userLocation
     let list = stations.map(st => {
-      const dist = getHaversineDistance(userLocation.lat, userLocation.lng, st.lat, st.lng);
+      const ov = overlays[st.id] || {};
+      const reviews = ov.reviews || [];
+      const rating = reviews.length ? Math.round(reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length * 10) / 10 : null;
       return {
         ...st,
-        distanceKm: dist
+        prices: { ...st.prices, ...(ov.prices || {}) },
+        userReported: !!ov.prices,
+        reviews,
+        reviewsCount: reviews.length,
+        rating,
+        amenities: st.open24 ? ['open24'] : []
       };
     });
 
-    // 2. Filter by country if selected
     if (selectedCountry !== 'ALL') {
       list = list.filter(st => st.country === selectedCountry);
     }
 
-    // 3. Filter by search radius (km)
-    list = list.filter(st => st.distanceKm <= searchRadiusKm);
+    // I gestori a volte comunicano prezzi errati (es. 1.169 invece di 2.169): un prezzo molto sotto
+    // la mediana della zona viene segnalato come anomalo ed escluso dal badge "più conveniente"
+    const values = list.map(st => getPrice(st, selectedFuelType, selectedServiceMode)).filter(v => v != null).sort((a, b) => a - b);
+    const median = values.length ? values[Math.floor(values.length / 2)] : null;
+    const isSuspect = val => val != null && median != null && values.length >= 5 && val < median * 0.85;
 
-    // 4. Identify lowest & highest price in active filtered set
+    // Min/max del set filtrato per i badge "più conveniente" / "più caro"
     let minPrice = Infinity;
     let maxPrice = -Infinity;
-
-    list.forEach(st => {
-      const fuelObj = st.prices[selectedFuelType];
-      if (fuelObj) {
-        const val = selectedServiceMode === 'served' && fuelObj.served ? fuelObj.served : fuelObj.self;
-        if (val < minPrice) minPrice = val;
-        if (val > maxPrice) maxPrice = val;
-      }
-    });
+    for (const val of values) {
+      if (isSuspect(val)) continue;
+      if (val < minPrice) minPrice = val;
+      if (val > maxPrice) maxPrice = val;
+    }
 
     list = list.map(st => {
-      const fuelObj = st.prices[selectedFuelType];
-      const val = fuelObj ? (selectedServiceMode === 'served' && fuelObj.served ? fuelObj.served : fuelObj.self) : null;
+      const val = getPrice(st, selectedFuelType, selectedServiceMode);
       return {
         ...st,
-        isCheapest: val === minPrice && minPrice !== Infinity,
-        isExpensive: val === maxPrice && maxPrice !== -Infinity && maxPrice !== minPrice
+        currentPrice: val,
+        priceSuspect: isSuspect(val),
+        isCheapest: val != null && val === minPrice,
+        isExpensive: val != null && val === maxPrice && maxPrice !== minPrice
       };
     });
 
-    // 5. Sort list
+    // Ordinamento: i distributori senza il carburante scelto vanno in fondo
     list.sort((a, b) => {
-      if (a.isSponsored && !b.isSponsored) return -1;
-      if (!a.isSponsored && b.isSponsored) return 1;
-
-      if (sortBy === 'price') {
-        const priceA = a.prices[selectedFuelType]?.self || 99;
-        const priceB = b.prices[selectedFuelType]?.self || 99;
-        return priceA - priceB;
-      } else if (sortBy === 'distance') {
-        return a.distanceKm - b.distanceKm;
-      } else if (sortBy === 'rating') {
-        return b.rating - a.rating;
-      }
-      return 0;
+      if (sortBy === 'distance') return a.distanceKm - b.distanceKm;
+      if (sortBy === 'rating') return (b.rating ?? -1) - (a.rating ?? -1) || a.distanceKm - b.distanceKm;
+      if (a.priceSuspect !== b.priceSuspect) return a.priceSuspect ? 1 : -1;
+      return (a.currentPrice ?? Infinity) - (b.currentPrice ?? Infinity) || a.distanceKm - b.distanceKm;
     });
 
     return list;
-  }, [stations, userLocation, selectedCountry, selectedFuelType, selectedServiceMode, sortBy, searchRadiusKm]);
+  }, [stations, overlays, selectedCountry, selectedFuelType, selectedServiceMode, sortBy]);
 
-  // Handle Price Report Update from user
+  // Segnalazione prezzo dell'utente (salvata sul dispositivo)
   const handleUpdatePrice = (stationId, fuelType, serviceMode, priceVal) => {
-    setStations(prev => prev.map(st => {
-      if (st.id === stationId) {
-        const updatedPrices = { ...st.prices };
-        if (!updatedPrices[fuelType]) {
-          updatedPrices[fuelType] = { self: priceVal, served: priceVal + 0.15 };
-        } else {
-          updatedPrices[fuelType] = {
-            ...updatedPrices[fuelType],
-            [serviceMode]: priceVal
-          };
+    setOverlays(prev => {
+      const ov = prev[stationId] || {};
+      const base = stations.find(s => s.id === stationId)?.prices?.[fuelType] || { self: null, served: null };
+      const prevFuel = ov.prices?.[fuelType] || base;
+      return {
+        ...prev,
+        [stationId]: {
+          ...ov,
+          prices: {
+            ...(ov.prices || {}),
+            [fuelType]: { ...prevFuel, [serviceMode]: priceVal, updatedAt: new Date().toISOString() }
+          }
         }
-        return {
-          ...st,
-          prices: updatedPrices,
-          updatedHoursAgo: 0,
-          updatedBy: "Tu (Verificato)"
-        };
-      }
-      return st;
-    }));
-
-    // Award +50 points
+      };
+    });
     setUserPoints(pts => pts + 50);
   };
 
-  // Handle Review Submission
   const handleAddReview = (stationId, newReview) => {
-    setStations(prev => prev.map(st => {
-      if (st.id === stationId) {
-        return {
-          ...st,
-          reviewsCount: st.reviewsCount + 1,
-          reviews: [newReview, ...st.reviews]
-        };
-      }
-      return st;
-    }));
+    setOverlays(prev => {
+      const ov = prev[stationId] || {};
+      return { ...prev, [stationId]: { ...ov, reviews: [newReview, ...(ov.reviews || [])] } };
+    });
   };
+
+  // Il drawer deve riflettere le modifiche (nuova recensione, prezzo segnalato)
+  const selectedStationLive = selectedStation
+    ? processedStations.find(s => s.id === selectedStation.id) || selectedStation
+    : null;
 
   return (
     <div className="min-h-screen bg-[#0b0f19] text-slate-100 flex flex-col font-sans pb-16 selection:bg-emerald-500 selection:text-slate-950">
-      
+
       {/* Top Header */}
       <Header
         currentLang={currentLang}
@@ -263,7 +269,7 @@ export default function App() {
 
       {/* Main Grid Workspace Layout */}
       <main className="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-4 lg:p-6 grid grid-cols-1 lg:grid-cols-12 gap-4">
-        
+
         {/* Left Column: Interactive Map View (7 cols on desktop) */}
         <section className="lg:col-span-7 h-[420px] lg:h-[calc(100vh-140px)] sticky top-20">
           <MapComponent
@@ -282,6 +288,7 @@ export default function App() {
         <section className="lg:col-span-5 h-[500px] lg:h-[calc(100vh-140px)]">
           <StationList
             stations={processedStations}
+            dataStatus={dataStatus}
             selectedStation={selectedStation}
             onSelectStation={setSelectedStation}
             selectedFuelType={selectedFuelType}
@@ -301,7 +308,7 @@ export default function App() {
 
       {/* Slide-over Station Detail Drawer */}
       <StationDetailDrawer
-        station={selectedStation}
+        station={selectedStationLive}
         onClose={() => setSelectedStation(null)}
         onOpenReportModal={(st) => setReportTargetStation(st)}
         onOpenReviewModal={(st) => setReviewTargetStation(st)}
@@ -312,7 +319,7 @@ export default function App() {
       <TripCalculatorModal
         isOpen={isTripCalcOpen}
         onClose={() => setIsTripCalcOpen(false)}
-        stations={stations}
+        stations={processedStations}
         currentLang={currentLang}
       />
 
@@ -338,6 +345,8 @@ export default function App() {
       <PriceTrendModal
         isOpen={isTrendsOpen}
         onClose={() => setIsTrendsOpen(false)}
+        stations={processedStations}
+        selectedServiceMode={selectedServiceMode}
         currentLang={currentLang}
       />
 

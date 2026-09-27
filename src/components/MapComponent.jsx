@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Circle, useMap } from 'react-leaflet';
 import L from 'leaflet';
-import { Fuel, Star, MapPin, Zap, Navigation } from 'lucide-react';
+import { Fuel, MapPin } from 'lucide-react';
 import { translations } from '../i18n/translations';
+import { formatPrice } from '../utils/price';
 
 // Helper component to smoothly center map on user or selected station
 function ChangeView({ center, zoom }) {
@@ -15,35 +16,27 @@ function ChangeView({ center, zoom }) {
   return null;
 }
 
-export default function MapComponent({ 
-  userLocation, 
-  stations, 
-  selectedStation, 
-  onSelectStation, 
-  selectedFuelType, 
-  selectedServiceMode, 
+export default function MapComponent({
+  userLocation,
+  stations,
+  selectedStation,
+  onSelectStation,
+  selectedFuelType,
+  selectedServiceMode,
   searchRadiusKm,
-  currentLang 
+  currentLang
 }) {
   const t = translations[currentLang] || translations.en;
-  const centerPos = selectedStation 
-    ? [selectedStation.lat, selectedStation.lng] 
+  const centerPos = selectedStation
+    ? [selectedStation.lat, selectedStation.lng]
     : [userLocation.lat, userLocation.lng];
 
   // Helper to create custom divIcon pins with price text
   const createPinIcon = (station) => {
-    const fuelPriceObj = station.prices[selectedFuelType];
-    let priceText = "N/A";
-    if (fuelPriceObj) {
-      priceText = selectedServiceMode === 'served' && fuelPriceObj.served
-        ? fuelPriceObj.served.toFixed(3)
-        : fuelPriceObj.self.toFixed(3);
-    }
+    const priceText = formatPrice(station.currentPrice);
 
     let pinClass = "pin-average";
-    if (station.isSponsored) {
-      pinClass = "pin-sponsored";
-    } else if (station.isCheapest) {
+    if (station.isCheapest) {
       pinClass = "pin-cheapest";
     } else if (station.isExpensive) {
       pinClass = "pin-expensive";
@@ -51,7 +44,7 @@ export default function MapComponent({
 
     const htmlString = `
       <div class="custom-station-pin ${pinClass}">
-        ${station.isSponsored ? '⭐ ' : ''}€${priceText}
+        ${priceText}
       </div>
     `;
 
@@ -75,14 +68,14 @@ export default function MapComponent({
 
   return (
     <div className="relative w-full h-full rounded-2xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
-      <MapContainer 
-        center={centerPos} 
-        zoom={13} 
-        scrollWheelZoom={true} 
+      <MapContainer
+        center={centerPos}
+        zoom={13}
+        scrollWheelZoom={true}
         className="w-full h-full z-10"
       >
         <ChangeView center={centerPos} zoom={13} />
-        
+
         {/* Free OpenStreetMap Tiles (No API key required) */}
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -90,10 +83,10 @@ export default function MapComponent({
         />
 
         {/* Search Radius Circle Overlay */}
-        <Circle 
-          center={[userLocation.lat, userLocation.lng]} 
-          radius={searchRadiusKm * 1000} 
-          pathOptions={{ fillColor: '#10b981', fillOpacity: 0.08, color: '#10b981', weight: 1.5, dashArray: '4, 8' }} 
+        <Circle
+          center={[userLocation.lat, userLocation.lng]}
+          radius={searchRadiusKm * 1000}
+          pathOptions={{ fillColor: '#10b981', fillOpacity: 0.08, color: '#10b981', weight: 1.5, dashArray: '4, 8' }}
         />
 
         {/* User Location Marker */}
@@ -108,9 +101,9 @@ export default function MapComponent({
 
         {/* Fuel Stations Markers */}
         {stations.map((st) => (
-          <Marker 
-            key={st.id} 
-            position={[st.lat, st.lng]} 
+          <Marker
+            key={st.id}
+            position={[st.lat, st.lng]}
             icon={createPinIcon(st)}
             eventHandlers={{
               click: () => onSelectStation(st)
@@ -128,7 +121,7 @@ export default function MapComponent({
                   <div>
                     <span className="text-[10px] text-slate-500 block uppercase font-bold">{t.fuelTypes[selectedFuelType]}</span>
                     <span className="text-base font-black text-emerald-600">
-                      €{st.prices[selectedFuelType]?.self ? st.prices[selectedFuelType].self.toFixed(3) : 'N/A'}
+                      {formatPrice(st.currentPrice)}
                     </span>
                   </div>
 

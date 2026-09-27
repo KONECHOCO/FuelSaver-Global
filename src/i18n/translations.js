@@ -1,5 +1,16 @@
 export const translations = {
   it: {
+    data: {
+      suspect: "Prezzo anomalo, da verificare",
+      loading: "Caricamento prezzi ufficiali...",
+      noStations: "Nessun distributore trovato in questo raggio. Prova ad aumentarlo.",
+      unsupported: "Questo paese non è ancora coperto da una fonte ufficiale. Disponibili: Italia, Francia, Spagna, Germania.",
+      officialSource: "Fonte ufficiale",
+      stale: "Prezzo non aggiornato da {n} giorni",
+      daysAgo: "giorni fa",
+      noRating: "Nuovo",
+      error: "Servizio dati non raggiungibile. Riprova tra poco."
+    },
     appName: "FuelSaver Global",
     appSubtitle: "Trova il benzinaio con il prezzo migliore vicino a te",
     searchPlaceholder: "Cerca città, indirizzo o cap...",
@@ -90,10 +101,13 @@ export const translations = {
       savingsMsg: "Risparmi fino a"
     },
     trends: {
-      title: "Analisi & Forecast Prezzi Nazionali",
-      subtitle: "Storico prezzi degli ultimi 30 giorni e previsioni AI",
-      forecastAlert: "⚠️ ATTENZIONE: Prezzi in rialzo previsti domani (+2.5 cent/L). Si consiglia di fare rifornimento oggi!",
-      chartLabel: "Prezzo Medio (€/L)"
+      title: "Prezzi nella tua zona",
+      subtitle: "Minimo, medio e massimo tra i distributori nel raggio selezionato",
+      chartLabel: "Prezzo (€/L)",
+      min: "Min",
+      avg: "Media",
+      max: "Max",
+      fullTankSaving: "Scegliendo il più economico invece del più caro risparmi {x} su un pieno da 50 L"
     },
     monetization: {
       adBannerText: "📢 AdMob Banner Ads - Sostieni l'app per mantenerla gratuita!",
@@ -109,6 +123,17 @@ export const translations = {
     }
   },
   en: {
+    data: {
+      suspect: "Unusual price, please verify",
+      loading: "Loading official prices...",
+      noStations: "No stations found in this radius. Try increasing it.",
+      unsupported: "This country is not yet covered by an official source. Available: Italy, France, Spain, Germany.",
+      officialSource: "Official source",
+      stale: "Price not updated for {n} days",
+      daysAgo: "days ago",
+      noRating: "New",
+      error: "Price service unreachable. Please try again shortly."
+    },
     appName: "FuelSaver Global",
     appSubtitle: "Find the best fuel prices near you and save money",
     searchPlaceholder: "Search city, address or zip code...",
@@ -199,10 +224,13 @@ export const translations = {
       savingsMsg: "Save up to"
     },
     trends: {
-      title: "National Fuel Price Trends & Forecast",
-      subtitle: "30-day historical prices and AI trend forecast",
-      forecastAlert: "⚠️ ALERT: Fuel prices expected to rise tomorrow (+2.5¢). Fill up today to save!",
-      chartLabel: "Avg Price (€/L)"
+      title: "Prices in your area",
+      subtitle: "Lowest, average and highest among stations in the selected radius",
+      chartLabel: "Price (€/L)",
+      min: "Min",
+      avg: "Avg",
+      max: "Max",
+      fullTankSaving: "Choosing the cheapest instead of the most expensive saves you {x} on a 50 L fill-up"
     },
     monetization: {
       adBannerText: "📢 AdMob Banner Ads - Support us to keep this app 100% free!",
@@ -218,6 +246,17 @@ export const translations = {
     }
   },
   es: {
+    data: {
+      suspect: "Precio anómalo, por verificar",
+      loading: "Cargando precios oficiales...",
+      noStations: "No hay gasolineras en este radio. Prueba a ampliarlo.",
+      unsupported: "Este país aún no tiene una fuente oficial. Disponibles: Italia, Francia, España, Alemania.",
+      officialSource: "Fuente oficial",
+      stale: "Precio sin actualizar desde hace {n} días",
+      daysAgo: "días",
+      noRating: "Nuevo",
+      error: "Servicio de precios no disponible. Inténtalo de nuevo."
+    },
     appName: "FuelSaver Global",
     appSubtitle: "Encuentra la gasolinera más barata cerca de ti",
     searchPlaceholder: "Buscar ciudad, dirección...",
@@ -308,10 +347,13 @@ export const translations = {
       savingsMsg: "Ahorra hasta"
     },
     trends: {
-      title: "Tendencias de Precios de Combustible",
-      subtitle: "Histórico de 30 días y predicción AI",
-      forecastAlert: "⚠️ ALERTA: Se prevé una subida de precios mañana (+2.5 cent/L). ¡Reposta hoy!",
-      chartLabel: "Precio Medio (€/L)"
+      title: "Precios en tu zona",
+      subtitle: "Mínimo, medio y máximo entre las gasolineras del radio seleccionado",
+      chartLabel: "Precio (€/L)",
+      min: "Mín",
+      avg: "Media",
+      max: "Máx",
+      fullTankSaving: "Eligiendo la más barata en lugar de la más cara ahorras {x} en un depósito de 50 L"
     },
     monetization: {
       adBannerText: "📢 Anuncios AdMob - ¡Apóyanos para mantener la app gratis!",
@@ -327,6 +369,17 @@ export const translations = {
     }
   },
   fr: {
+    data: {
+      suspect: "Prix inhabituel, à vérifier",
+      loading: "Chargement des prix officiels...",
+      noStations: "Aucune station dans ce rayon. Essayez de l’agrandir.",
+      unsupported: "Ce pays n’est pas encore couvert par une source officielle. Disponibles : Italie, France, Espagne, Allemagne.",
+      officialSource: "Source officielle",
+      stale: "Prix non mis à jour depuis {n} jours",
+      daysAgo: "jours",
+      noRating: "Nouveau",
+      error: "Service de prix injoignable. Réessayez plus tard."
+    },
     appName: "FuelSaver Global",
     appSubtitle: "Trouvez la station-service la moins chère près de chez vous",
     searchPlaceholder: "Rechercher une ville, adresse...",
@@ -417,10 +470,13 @@ export const translations = {
       savingsMsg: "Économisez jusqu'à"
     },
     trends: {
-      title: "Tendances des Prix des Carburants",
-      subtitle: "Historique 30 jours et prévisions IA",
-      forecastAlert: "⚠️ ALERTE : Hausse des prix prévue demain (+2.5 cent/L). Faites le plein aujourd'hui !",
-      chartLabel: "Prix Moyen (€/L)"
+      title: "Prix dans votre zone",
+      subtitle: "Minimum, moyenne et maximum parmi les stations du rayon choisi",
+      chartLabel: "Prix (€/L)",
+      min: "Min",
+      avg: "Moy",
+      max: "Max",
+      fullTankSaving: "En choisissant la moins chère plutôt que la plus chère, vous économisez {x} sur un plein de 50 L"
     },
     monetization: {
       adBannerText: "📢 AdMob Banner Ads - Soutenez l'application pour la garder gratuite !",
@@ -436,6 +492,17 @@ export const translations = {
     }
   },
   de: {
+    data: {
+      suspect: "Ungewöhnlicher Preis, bitte prüfen",
+      loading: "Offizielle Preise werden geladen...",
+      noStations: "Keine Tankstellen in diesem Radius. Radius vergrößern.",
+      unsupported: "Für dieses Land gibt es noch keine offizielle Quelle. Verfügbar: Italien, Frankreich, Spanien, Deutschland.",
+      officialSource: "Offizielle Quelle",
+      stale: "Preis seit {n} Tagen nicht aktualisiert",
+      daysAgo: "Tagen",
+      noRating: "Neu",
+      error: "Preisdienst nicht erreichbar. Bitte später erneut versuchen."
+    },
     appName: "FuelSaver Global",
     appSubtitle: "Finde die günstigste Tankstelle in deiner Nähe",
     searchPlaceholder: "Stadt, Adresse oder PLZ suchen...",
@@ -526,10 +593,13 @@ export const translations = {
       savingsMsg: "Ersparnis bis zu"
     },
     trends: {
-      title: "Spritpreisentwicklung & Prognose",
-      subtitle: "30-Tage Historie und KI-Prognose",
-      forecastAlert: "⚠️ WARNUNG: Steigende Kraftstoffpreise für morgen erwartet (+2.5 cent/L). Heute noch tanken!",
-      chartLabel: "Durchschnittspreis (€/L)"
+      title: "Preise in deiner Umgebung",
+      subtitle: "Minimum, Durchschnitt und Maximum der Tankstellen im gewählten Radius",
+      chartLabel: "Preis (€/L)",
+      min: "Min",
+      avg: "Ø",
+      max: "Max",
+      fullTankSaving: "Wer die günstigste statt der teuersten wählt, spart {x} bei 50 L Tankfüllung"
     },
     monetization: {
       adBannerText: "📢 AdMob Banner-Werbung - Unterstütze uns, damit die App gratis bleibt!",
