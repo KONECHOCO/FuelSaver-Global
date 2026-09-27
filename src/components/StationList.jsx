@@ -13,7 +13,8 @@ import {
   Zap, 
   DollarSign,
   Sparkles,
-  ChevronRight
+  ChevronRight,
+  Building2
 } from 'lucide-react';
 import { translations } from '../i18n/translations';
 
@@ -157,6 +158,12 @@ export default function StationList({
                 {/* Station Top Bar: Tags & Badges */}
                 <div className="flex items-center justify-between gap-2 mb-2">
                   <div className="flex items-center gap-1.5 flex-wrap">
+                    {st.isOfficialMimit && (
+                      <span className="px-2 py-0.5 text-[10px] font-black bg-blue-500/20 text-blue-400 border border-blue-500/40 rounded-md flex items-center gap-1">
+                        🏛️ MIMIT UFFICIALE
+                      </span>
+                    )}
+
                     {st.isSponsored && (
                       <span className="px-2 py-0.5 text-[10px] font-black bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 rounded-md flex items-center gap-1">
                         <Sparkles className="w-3 h-3 fill-slate-950" />
