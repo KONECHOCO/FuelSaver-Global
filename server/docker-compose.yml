@@ -1,0 +1,10 @@
+# FuelSaver API on the shared Hetzner VPS: container "fuel-api" on host port 8096
+# (8090-8095 are taken by other apps). The host nginx proxies fuel.ikonetsolutions.com to it.
+services:
+  fuel-api:
+    build: .
+    container_name: fuel-api
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "127.0.0.1:8096:3001"
