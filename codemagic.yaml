@@ -1,9 +1,5 @@
 # FuelSaver — build per App Store e Play Store.
-# Prima della pubblicazione crea su Codemagic il gruppo di variabili "fuelsaver_admob" con gli ID reali:
-#   ADMOB_IOS_APP_ID, ADMOB_ANDROID_APP_ID
-#   VITE_ADMOB_IOS_BANNER, VITE_ADMOB_IOS_APP_OPEN, VITE_ADMOB_IOS_INTERSTITIAL, VITE_ADMOB_IOS_REWARDED
-#   VITE_ADMOB_ANDROID_BANNER, VITE_ADMOB_ANDROID_APP_OPEN, VITE_ADMOB_ANDROID_INTERSTITIAL, VITE_ADMOB_ANDROID_REWARDED
-# Senza questo gruppo l'app usa gli annunci di TEST di Google (non guadagna nulla).
+# Gli ID AdMob (non segreti) sono in .env.production e ios/App/App/Info.plist.
 workflows:
   ios-app-store:
     name: FuelSaver iOS App Store
@@ -12,8 +8,6 @@ workflows:
     integrations:
       app_store_connect: Ikonet Solutions
     environment:
-      groups:
-        - fuelsaver_admob
       ios_signing:
         distribution_type: app_store
         bundle_identifier: com.ikonet.fuelsaver
@@ -29,11 +23,6 @@ workflows:
         script: |
           npm run build
           npx cap sync ios
-      - name: Set real AdMob App ID
-        script: |
-          if [ -n "$ADMOB_IOS_APP_ID" ]; then
-            /usr/libexec/PlistBuddy -c "Set :GADApplicationIdentifier $ADMOB_IOS_APP_ID" ios/App/App/Info.plist
-          fi
       - name: Set up signing profiles
         script: xcode-project use-profiles
       - name: Apply Codemagic build number
@@ -59,8 +48,6 @@ workflows:
     max_build_duration: 45
     instance_type: linux_x2
     environment:
-      groups:
-        - fuelsaver_admob
       android_signing:
         - fuelsaver_android
       vars:

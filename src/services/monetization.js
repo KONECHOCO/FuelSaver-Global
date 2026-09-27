@@ -51,7 +51,8 @@ const REAL_IDS = {
   interstitial: env[`VITE_ADMOB_${P}_INTERSTITIAL`],
   rewarded: env[`VITE_ADMOB_${P}_REWARDED`]
 };
-const USE_TEST_ADS = !REAL_IDS.banner;
+// In sviluppo sempre annunci di test: cliccare i propri annunci reali viola le norme AdMob
+const USE_TEST_ADS = env.DEV || !REAL_IDS.banner;
 const AD_IDS = USE_TEST_ADS ? TEST_IDS[platform] || TEST_IDS.android : REAL_IDS;
 
 // Frequenze: aggressive ma dentro le regole AdMob (niente annunci a raffica o durante l'uso attivo)
