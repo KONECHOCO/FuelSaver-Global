@@ -80,8 +80,11 @@ function writeStorage(key, value) {
 }
 
 // ---------- Stato osservabile da React ----------
+// Solo in sviluppo: ?storeshot mostra l'interfaccia d'acquisto nativa per gli screenshot degli store
+const previewNative = import.meta.env.DEV && typeof location !== 'undefined' && location.search.includes('storeshot');
+
 let state = {
-  native,
+  native: native || previewNative,
   isPro: readStorage(PRO_KEY, false),
   proPrice: null,
   adsReady: false,
