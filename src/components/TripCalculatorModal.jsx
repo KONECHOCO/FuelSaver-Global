@@ -70,9 +70,9 @@ export default function TripCalculatorModal({ isOpen, onClose, stations, current
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex justify-center overflow-y-auto [&>*]:my-auto px-4 pt-[max(1rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))]">
       <div className="w-full max-w-lg bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-        
+
         {/* Header */}
         <div className="p-5 border-b border-slate-800 flex items-center justify-between bg-gradient-to-r from-blue-950/40 to-slate-900">
           <div className="flex items-center gap-3">
@@ -91,7 +91,7 @@ export default function TripCalculatorModal({ isOpen, onClose, stations, current
 
         {/* Body Form */}
         <form onSubmit={handleCalculate} className="p-6 space-y-4">
-          
+
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-bold text-slate-300 mb-1">{t.tripCalculator.origin}</label>

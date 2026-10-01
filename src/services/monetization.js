@@ -189,6 +189,11 @@ async function removeAllAds() {
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
+// Si risolve quando le richieste di sistema (ATT, consenso GDPR) sono concluse: l'app aspetta questo
+// momento prima di chiedere la posizione, perché iOS mostra un solo popup alla volta e scarta gli altri.
+let resolveConsentDone;
+export const consentDone = new Promise(r => { resolveConsentDone = r; });
+
 async function waitUntilActive() {
   const { isActive } = await CapApp.getState();
   if (isActive) return;
@@ -210,11 +215,11 @@ async function requestTrackingPermission() {
   try {
     await waitUntilActive();
     await sleep(800);
-    for (let attempt = 0; attempt < 3; attempt++) {
+    for (let attempt = 0; attempt < 8; attempt++) {
       const { status } = await AdMob.trackingAuthorizationStatus();
       if (status !== 'notDetermined') return;
       await AdMob.requestTrackingAuthorization();
-      await sleep(1000);
+      await sleep(1500);
     }
   } catch (err) {
     console.info('ATT non disponibile', err);
@@ -238,11 +243,18 @@ async function gatherConsent() {
 
 /** Da chiamare una volta all'avvio dell'app. */
 export async function initMonetization() {
-  if (!native) return;
+  if (!native) {
+    resolveConsentDone();
+    return;
+  }
   await refreshProStatus();
-  if (state.isPro) return;
+  if (state.isPro) {
+    resolveConsentDone();
+    return;
+  }
 
   const canRequestAds = await gatherConsent();
+  resolveConsentDone();
   if (!canRequestAds) return;
 
   await AdMob.initialize({ initializeForTesting: USE_TEST_ADS });

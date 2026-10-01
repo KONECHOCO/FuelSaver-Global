@@ -28,7 +28,7 @@ export default function ProModal({ isOpen, onClose, currentLang }) {
   const benefits = [t.pro.noAds, t.pro.tripCalc, t.pro.stats, t.pro.support];
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex justify-center overflow-y-auto [&>*]:my-auto px-4 pt-[max(1rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))]">
       <div className="w-full max-w-md bg-slate-900 border border-amber-500/40 rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         <div className="p-5 flex items-start justify-between bg-gradient-to-br from-amber-500/20 to-slate-900">
           <div className="flex items-center gap-3">

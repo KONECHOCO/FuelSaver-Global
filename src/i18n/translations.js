@@ -21,6 +21,7 @@ export const translations = {
       removeAds: "Rimuovi pubblicità"
     },
     data: {
+      locationError: "Posizione non disponibile. Consenti l’accesso alla posizione nelle Impostazioni o cerca una città.",
       suspect: "Prezzo anomalo, da verificare",
       loading: "Caricamento prezzi ufficiali...",
       noStations: "Nessun distributore trovato in questo raggio. Prova ad aumentarlo.",
@@ -86,6 +87,7 @@ export const translations = {
       priceTrends: "Andamento Prezzi"
     },
     drawer: {
+      back: "Indietro",
       title: "Dettaglio Distributore",
       priceListTitle: "Listino Prezzi Attuale",
       reviewsTitle: "Recensioni & Feedback Utenti",
@@ -164,6 +166,7 @@ export const translations = {
       removeAds: "Remove ads"
     },
     data: {
+      locationError: "Location unavailable. Allow location access in Settings or search for a city.",
       suspect: "Unusual price, please verify",
       loading: "Loading official prices...",
       noStations: "No stations found in this radius. Try increasing it.",
@@ -229,6 +232,7 @@ export const translations = {
       priceTrends: "Price Trends"
     },
     drawer: {
+      back: "Back",
       title: "Gas Station Details",
       priceListTitle: "Current Fuel Prices",
       reviewsTitle: "Reviews & User Feedback",
@@ -307,6 +311,7 @@ export const translations = {
       removeAds: "Quitar anuncios"
     },
     data: {
+      locationError: "Ubicación no disponible. Permite el acceso a la ubicación en Ajustes o busca una ciudad.",
       suspect: "Precio anómalo, por verificar",
       loading: "Cargando precios oficiales...",
       noStations: "No hay gasolineras en este radio. Prueba a ampliarlo.",
@@ -372,6 +377,7 @@ export const translations = {
       priceTrends: "Tendencia de Precios"
     },
     drawer: {
+      back: "Atrás",
       title: "Detalles de la Gasolinera",
       priceListTitle: "Precios Actuales",
       reviewsTitle: "Reseñas y Comentarios",
@@ -450,6 +456,7 @@ export const translations = {
       removeAds: "Supprimer les pubs"
     },
     data: {
+      locationError: "Position indisponible. Autorisez l’accès à la position dans Réglages ou cherchez une ville.",
       suspect: "Prix inhabituel, à vérifier",
       loading: "Chargement des prix officiels...",
       noStations: "Aucune station dans ce rayon. Essayez de l’agrandir.",
@@ -515,6 +522,7 @@ export const translations = {
       priceTrends: "Tendance des Prix"
     },
     drawer: {
+      back: "Retour",
       title: "Détails de la Station",
       priceListTitle: "Prix Actuels des Carburants",
       reviewsTitle: "Avis et Commentaires",
@@ -593,6 +601,7 @@ export const translations = {
       removeAds: "Werbung entfernen"
     },
     data: {
+      locationError: "Standort nicht verfügbar. Erlaube den Standortzugriff in den Einstellungen oder suche eine Stadt.",
       suspect: "Ungewöhnlicher Preis, bitte prüfen",
       loading: "Offizielle Preise werden geladen...",
       noStations: "Keine Tankstellen in diesem Radius. Radius vergrößern.",
@@ -658,6 +667,7 @@ export const translations = {
       priceTrends: "Preisentwicklung"
     },
     drawer: {
+      back: "Zurück",
       title: "Tankstellen Details",
       priceListTitle: "Aktuelle Kraftstoffpreise",
       reviewsTitle: "Bewertungen & Feedback",

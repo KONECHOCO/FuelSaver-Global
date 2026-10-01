@@ -14,8 +14,10 @@ import {
   CheckCircle2,
   Share2,
   Heart,
-  ExternalLink
+  ExternalLink,
+  ChevronLeft
 } from 'lucide-react';
+import { Capacitor } from '@capacitor/core';
 import { translations } from '../i18n/translations';
 import { formatAge, formatPrice, isStale } from '../utils/price';
 
@@ -31,7 +33,10 @@ export default function StationDetailDrawer({
   if (!station) return null;
 
   const handleOpenNavigation = () => {
-    const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${station.lat},${station.lng}`;
+    // Su iPhone/iPad apriamo Apple Maps, altrove Google Maps
+    const mapsUrl = Capacitor.getPlatform() === 'ios'
+      ? `https://maps.apple.com/?daddr=${station.lat},${station.lng}&dirflg=d`
+      : `https://www.google.com/maps/dir/?api=1&destination=${station.lat},${station.lng}`;
     window.open(mapsUrl, '_blank');
   };
 
@@ -39,13 +44,20 @@ export default function StationDetailDrawer({
     <div className="fixed inset-y-0 right-0 z-50 w-full sm:w-96 bg-slate-950/95 border-l border-slate-800 shadow-2xl backdrop-blur-xl flex flex-col transition-all duration-300">
 
       {/* Header */}
-      <div className="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-900/60">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
+      <div className="px-4 pb-3 pt-[max(1rem,env(safe-area-inset-top))] border-b border-slate-800 flex items-center justify-between gap-2 bg-slate-900/60">
+        <button
+          onClick={onClose}
+          className="flex items-center gap-0.5 -ml-1.5 pr-2 py-1.5 text-emerald-400 hover:text-emerald-300 font-bold text-sm rounded-lg shrink-0"
+        >
+          <ChevronLeft className="w-6 h-6" />
+          <span>{t.drawer.back}</span>
+        </button>
+        <div className="flex items-center gap-2 min-w-0">
+          <div className="w-8 h-8 shrink-0 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
             <Fuel className="w-4 h-4" />
           </div>
-          <div>
-            <h2 className="font-extrabold text-sm text-slate-100">{t.drawer.title}</h2>
+          <div className="min-w-0">
+            <h2 className="font-extrabold text-sm text-slate-100 truncate">{t.drawer.title}</h2>
             <span className="text-[11px] text-slate-400 font-medium">{station.brand}</span>
           </div>
         </div>
@@ -59,7 +71,7 @@ export default function StationDetailDrawer({
       </div>
 
       {/* Drawer Content Area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-5 no-scrollbar">
+      <div className="flex-1 overflow-y-auto p-4 pb-[max(1rem,env(safe-area-inset-bottom))] space-y-5 no-scrollbar">
 
         {/* Main Station Banner */}
         <div className="p-4 bg-gradient-to-br from-slate-900 to-slate-950 rounded-2xl border border-slate-800 shadow-inner">

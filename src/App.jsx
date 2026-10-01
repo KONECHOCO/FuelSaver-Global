@@ -14,7 +14,8 @@ import PremiumGateModal from './components/PremiumGateModal';
 import { translations } from './i18n/translations';
 import { fetchStations } from './services/fuelDataService';
 import { getPrice, isStale } from './utils/price';
-import { initMonetization, trackAdAction, isFeatureUnlocked } from './services/monetization';
+import { initMonetization, trackAdAction, isFeatureUnlocked, consentDone } from './services/monetization';
+import { getDevicePosition } from './services/location';
 
 // Contributi dell'utente (segnalazioni prezzo, recensioni) salvati sul dispositivo.
 // TODO: sincronizzarli su un backend con moderazione per condividerli con la community.
@@ -114,44 +115,32 @@ export default function App() {
   }, [overlays]);
 
   // Real Browser Geolocation Trigger with Reverse Geocoding Address Details
-  const handleLocateMe = ({ silent = false } = {}) => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          const lat = position.coords.latitude;
-          const lng = position.coords.longitude;
-
-          let placeName = "La mia posizione GPS";
-          let addressDetails = null;
-
-          try {
-            // Reverse geocode to get city name & full address object
-            const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
-            const data = await res.json();
-            if (data && data.display_name) {
-              placeName = data.display_name;
-              addressDetails = data.address || null;
-            }
-          } catch (e) {
-            console.warn('Reverse geocode error:', e);
-          }
-
-          setUserLocation({
-            lat,
-            lng,
-            name: placeName,
-            addressDetails
-          });
-        },
-        (error) => {
-          console.warn('Geolocation failed or denied:', error);
-          if (!silent) alert('Posizione GPS non disponibile. Assicurati di aver dato i permessi al browser o digita la città nella barra di ricerca.');
-        },
-        { enableHighAccuracy: true, timeout: 8000 }
-      );
-    } else if (!silent) {
-      alert('La geolocalizzazione non è supportata dal tuo browser.');
+  const handleLocateMe = async ({ silent = false } = {}) => {
+    let lat;
+    let lng;
+    try {
+      ({ lat, lng } = await getDevicePosition());
+    } catch (error) {
+      console.warn('Geolocation failed or denied:', error);
+      if (!silent) alert(t.data.locationError);
+      return;
     }
+
+    let placeName = t.useMyLocation;
+    let addressDetails = null;
+    try {
+      // Reverse geocoding per nome città e indirizzo
+      const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+      const data = await res.json();
+      if (data && data.display_name) {
+        placeName = data.display_name;
+        addressDetails = data.address || null;
+      }
+    } catch (e) {
+      console.warn('Reverse geocode error:', e);
+    }
+
+    setUserLocation({ lat, lng, name: placeName, addressDetails });
   };
 
   // Al primo avvio proviamo subito a usare il GPS, come fanno tutte le app concorrenti
@@ -159,7 +148,8 @@ export default function App() {
   useEffect(() => {
     if (didAutoLocate.current) return;
     didAutoLocate.current = true;
-    handleLocateMe({ silent: true });
+    // Al massimo 20 s di attesa: se il consenso si blocca la posizione va chiesta comunque
+    Promise.race([consentDone, new Promise(r => setTimeout(r, 20000))]).then(() => handleLocateMe({ silent: true }));
   }, []);
 
   // Real OpenStreetMap Nominatim Live Geocoding with addressdetails=1

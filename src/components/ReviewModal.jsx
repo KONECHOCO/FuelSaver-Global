@@ -26,9 +26,9 @@ export default function ReviewModal({ isOpen, onClose, station, onAddReview, cur
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex justify-center overflow-y-auto [&>*]:my-auto px-4 pt-[max(1rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))]">
       <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-        
+
         {/* Header */}
         <div className="p-5 border-b border-slate-800 flex items-center justify-between bg-slate-950/60">
           <div className="flex items-center gap-3">
@@ -46,7 +46,7 @@ export default function ReviewModal({ isOpen, onClose, station, onAddReview, cur
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          
+
           {/* Star Rating selector */}
           <div className="text-center space-y-2">
             <label className="block text-xs font-bold text-slate-300">{t.modalReview.ratingLabel}</label>
