@@ -207,19 +207,19 @@ async function waitUntilActive() {
   });
 }
 
-// App Tracking Transparency (iOS): va chiesta PRIMA che AdMob raccolga dati.
-// iOS ignora la richiesta se l'app non è attiva in primo piano (es. durante l'avvio):
-// in quel caso la chiamata torna subito con "notDetermined" e la ripetiamo.
+// App Tracking Transparency (iOS): il popup viene mostrato dal codice nativo (SceneDelegate.swift)
+// appena l'app è attiva. Qui aspettiamo la risposta dell'utente prima di inizializzare AdMob, così
+// nessun dato di tracciamento viene raccolto prima del consenso. Dopo 6 s senza popup lo chiediamo
+// anche dal plugin come riserva.
 async function requestTrackingPermission() {
   if (platform !== 'ios') return;
   try {
     await waitUntilActive();
-    await sleep(800);
-    for (let attempt = 0; attempt < 8; attempt++) {
+    for (let waited = 0; waited < 60000; waited += 1000) {
       const { status } = await AdMob.trackingAuthorizationStatus();
       if (status !== 'notDetermined') return;
-      await AdMob.requestTrackingAuthorization();
-      await sleep(1500);
+      if (waited === 6000) AdMob.requestTrackingAuthorization().catch(() => {});
+      await sleep(1000);
     }
   } catch (err) {
     console.info('ATT non disponibile', err);
@@ -230,7 +230,10 @@ async function requestTrackingPermission() {
 async function gatherConsent() {
   await requestTrackingPermission();
   try {
-    let info = await AdMob.requestConsentInfo();
+    let info = await Promise.race([
+      AdMob.requestConsentInfo(),
+      sleep(10000).then(() => { throw new Error('UMP timeout'); })
+    ]);
     if (info.isConsentFormAvailable && info.status === AdmobConsentStatus.REQUIRED) {
       info = await AdMob.showConsentForm();
     }

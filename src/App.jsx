@@ -148,8 +148,8 @@ export default function App() {
   useEffect(() => {
     if (didAutoLocate.current) return;
     didAutoLocate.current = true;
-    // Al massimo 20 s di attesa: se il consenso si blocca la posizione va chiesta comunque
-    Promise.race([consentDone, new Promise(r => setTimeout(r, 20000))]).then(() => handleLocateMe({ silent: true }));
+    // Al massimo 75 s di attesa (l'utente può restare sul popup ATT): se il consenso si blocca la posizione va chiesta comunque
+    Promise.race([consentDone, new Promise(r => setTimeout(r, 75000))]).then(() => handleLocateMe({ silent: true }));
   }, []);
 
   // Real OpenStreetMap Nominatim Live Geocoding with addressdetails=1
