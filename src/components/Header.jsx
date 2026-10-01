@@ -42,23 +42,21 @@ export default function Header({
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full glass-panel border-b border-slate-800 shadow-xl">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 gap-3">
+    <header className="sticky top-0 z-40 w-full glass-panel border-b border-slate-800 shadow-xl pt-[env(safe-area-inset-top)]">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pl-[max(0.75rem,env(safe-area-inset-left))] pr-[max(0.75rem,env(safe-area-inset-right))]">
+        <div className="flex items-center justify-between h-16 gap-2 min-w-0">
 
           {/* Brand Logo & Name */}
-          <div className="flex items-center gap-3 shrink-0">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-500/20">
               <Fuel className="w-6 h-6 text-slate-950 stroke-[2.5]" />
             </div>
-            <div>
+            {/* Su schermi stretti resta solo il logo: il nome farebbe sbordare l'intestazione */}
+            <div className="hidden min-[400px]:block min-w-0">
               <div className="flex items-center gap-2">
-                <span className="font-extrabold text-xl tracking-tight text-white">{t.appName}</span>
-                <span className="hidden sm:inline-block px-2 py-0.5 text-[10px] font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full">
-                  GLOBAL
-                </span>
+                <span className="font-extrabold text-lg sm:text-xl tracking-tight text-white truncate">{t.appName}</span>
               </div>
-              <p className="hidden md:block text-xs text-slate-400 font-medium">
+              <p className="hidden xl:block text-xs text-slate-400 font-medium">
                 {t.appSubtitle}
               </p>
             </div>
@@ -87,12 +85,12 @@ export default function Header({
               className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all shrink-0 active:scale-95 shadow-md"
             >
               <MapPin className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
-              <span className="hidden md:inline">{t.useMyLocation}</span>
+              <span className="hidden xl:inline">{t.useMyLocation}</span>
             </button>
           </form>
 
           {/* Right Action Icons & Filters */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
 
             {/* Country Selector Filter */}
             <div className="hidden lg:flex items-center bg-slate-900 border border-slate-700 rounded-xl p-0.5">
@@ -113,10 +111,10 @@ export default function Header({
             {/* Quick Action: Trip Calculator */}
             <button
               onClick={onOpenTripCalc}
-              className="px-3 py-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-md shadow-blue-600/20 transition-all active:scale-95 shrink-0"
+              className="p-2 sm:px-3 sm:py-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-md shadow-blue-600/20 transition-all active:scale-95 shrink-0"
             >
-              <Navigation className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">{t.actions.calculateTrip}</span>
+              <Navigation className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
+              <span className="hidden lg:inline">{t.actions.calculateTrip}</span>
             </button>
 
             {/* Quick Action: Price Trends */}
@@ -139,7 +137,7 @@ export default function Header({
             {!isPro && (
               <button
                 onClick={onOpenMonetizationInfo}
-                className="px-2.5 py-1.5 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 rounded-xl text-xs font-black flex items-center gap-1 transition-all"
+                className="px-2 sm:px-2.5 py-1.5 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 rounded-xl text-xs font-black flex items-center gap-1 transition-all"
                 title={t.pro.title}
               >
                 <Crown className="w-4 h-4" />
@@ -149,11 +147,11 @@ export default function Header({
 
             {/* i18n Language Switcher */}
             <div className="relative flex items-center bg-slate-900 border border-slate-700 rounded-xl p-0.5">
-              <Globe className="w-3.5 h-3.5 text-slate-400 ml-2 mr-1" />
+              <Globe className="hidden sm:block w-3.5 h-3.5 text-slate-400 ml-2 mr-1" />
               <select
                 value={currentLang}
                 onChange={(e) => onLangChange(e.target.value)}
-                className="bg-transparent text-xs font-bold text-slate-200 pr-2 py-1 focus:outline-none cursor-pointer uppercase"
+                className="bg-transparent text-xs font-bold text-slate-200 pl-1.5 sm:pl-0 pr-1 sm:pr-2 py-1 focus:outline-none cursor-pointer uppercase"
               >
                 <option value="it" className="bg-slate-900 text-slate-100">🇮🇹 IT</option>
                 <option value="en" className="bg-slate-900 text-slate-100">🇬🇧 EN</option>

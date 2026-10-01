@@ -187,20 +187,51 @@ async function removeAllAds() {
   setState({ bannerHeight: 0 });
 }
 
-// Consenso GDPR (UMP, obbligatorio in UE/UK per AdMob) e poi ATT su iOS
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+async function waitUntilActive() {
+  const { isActive } = await CapApp.getState();
+  if (isActive) return;
+  await new Promise(resolve => {
+    const handle = CapApp.addListener('appStateChange', ({ isActive: active }) => {
+      if (active) {
+        handle.then(h => h.remove());
+        resolve();
+      }
+    });
+  });
+}
+
+// App Tracking Transparency (iOS): va chiesta PRIMA che AdMob raccolga dati.
+// iOS ignora la richiesta se l'app non è attiva in primo piano (es. durante l'avvio):
+// in quel caso la chiamata torna subito con "notDetermined" e la ripetiamo.
+async function requestTrackingPermission() {
+  if (platform !== 'ios') return;
+  try {
+    await waitUntilActive();
+    await sleep(800);
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const { status } = await AdMob.trackingAuthorizationStatus();
+      if (status !== 'notDetermined') return;
+      await AdMob.requestTrackingAuthorization();
+      await sleep(1000);
+    }
+  } catch (err) {
+    console.info('ATT non disponibile', err);
+  }
+}
+
+// Consenso GDPR (UMP, obbligatorio in UE/UK per AdMob). Un errore qui non deve bloccare ATT né gli annunci.
 async function gatherConsent() {
+  await requestTrackingPermission();
   try {
     let info = await AdMob.requestConsentInfo();
     if (info.isConsentFormAvailable && info.status === AdmobConsentStatus.REQUIRED) {
       info = await AdMob.showConsentForm();
     }
-    if (platform === 'ios') {
-      const { status } = await AdMob.trackingAuthorizationStatus();
-      if (status === 'notDetermined') await AdMob.requestTrackingAuthorization();
-    }
     return info.canRequestAds !== false;
   } catch (err) {
-    console.info('Consenso non disponibile', err);
+    console.info('Consenso UMP non disponibile', err);
     return true;
   }
 }
