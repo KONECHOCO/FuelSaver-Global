@@ -247,14 +247,20 @@ export async function initMonetization() {
     resolveConsentDone();
     return;
   }
-  await refreshProStatus();
+  // StoreKit può non rispondere mai (es. TestFlight con prodotto non ancora approvato):
+  // la verifica Pro non deve bloccare la richiesta ATT, quindi ha un tempo massimo
+  await Promise.race([refreshProStatus(), sleep(4000)]);
   if (state.isPro) {
     resolveConsentDone();
     return;
   }
 
-  const canRequestAds = await gatherConsent();
-  resolveConsentDone();
+  let canRequestAds = true;
+  try {
+    canRequestAds = await gatherConsent();
+  } finally {
+    resolveConsentDone();
+  }
   if (!canRequestAds) return;
 
   await AdMob.initialize({ initializeForTesting: USE_TEST_ADS });
@@ -370,12 +376,12 @@ export async function refreshProStatus() {
     // offline: teniamo l'ultimo stato noto
     console.info('Verifica Pro non riuscita', err);
   }
-  try {
-    const { product } = await NativePurchases.getProduct({ productIdentifier: PRO_PRODUCT_ID, productType: PURCHASE_TYPE.INAPP });
-    setState({ proPrice: product?.priceString || null });
-  } catch {
-    // prodotto non ancora configurato negli store
-  }
+  // Il prezzo localizzato serve solo alla schermata Pro: lo carichiamo senza attenderlo
+  NativePurchases.getProduct({ productIdentifier: PRO_PRODUCT_ID, productType: PURCHASE_TYPE.INAPP })
+    .then(({ product }) => setState({ proPrice: product?.priceString || null }))
+    .catch(() => {
+      // prodotto non ancora configurato negli store
+    });
 }
 
 export async function buyPro() {

@@ -72,6 +72,10 @@
 	<string>Your data will be used to show you more relevant ads and keep FuelSaver free.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>FuelSaver uses your location to find the cheapest fuel stations near you.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>FuelSaver uses your location only while you use the app, to find the cheapest fuel stations near you.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>FuelSaver uses your location only while you use the app, to find the cheapest fuel stations near you.</string>
 	<key>CFBundleLocalizations</key>
 	<array>
 		<string>it</string>
