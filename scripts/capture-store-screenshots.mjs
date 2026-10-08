@@ -1,14 +1,15 @@
-// Screenshot App Store dall'app web reale con dati reali: iPhone 6,9" (1320x2868) o iPad 13" (2064x2752).
+// Screenshot App Store dall'app web reale con dati reali: iPhone 6,9" (1320x2868) o iPad 13" (2064x2752) o Android 1080x1920.
 // Prerequisiti: `npm run server` (porta 3001) e `npm run dev` (porta 5173) avviati.
-// Uso: node scripts/capture-store-screenshots.mjs [iphone|ipad] [lat] [lng]
+// Uso: node scripts/capture-store-screenshots.mjs [iphone|ipad|android] [lat] [lng]
 import { chromium } from 'playwright';
 import { mkdir } from 'node:fs/promises';
 
-const device = process.argv[2] === 'ipad' ? 'ipad' : 'iphone';
+const device = ['ipad', 'android'].includes(process.argv[2]) ? process.argv[2] : 'iphone';
 const [lat = 45.4642, lng = 9.19] = process.argv.slice(3).map(Number);
 const SIZES = {
   iphone: { viewport: { width: 440, height: 956 }, deviceScaleFactor: 3, suffix: '1320x2868' },
-  ipad: { viewport: { width: 1032, height: 1376 }, deviceScaleFactor: 2, suffix: 'ipad-2064x2752' }
+  ipad: { viewport: { width: 1032, height: 1376 }, deviceScaleFactor: 2, suffix: 'ipad-2064x2752' },
+  android: { viewport: { width: 360, height: 640 }, deviceScaleFactor: 3, suffix: 'android-1080x1920' }
 };
 const size = SIZES[device];
 const OUT = 'store-assets/screenshots';
