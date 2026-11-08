@@ -33,7 +33,7 @@ export default function MapComponent({
 
   // Helper to create custom divIcon pins with price text
   const createPinIcon = (station) => {
-    const priceText = formatPrice(station.currentPrice);
+    const priceText = formatPrice(station.currentPrice, station.currency);
 
     let pinClass = "pin-average";
     if (station.isCheapest) {
@@ -121,7 +121,7 @@ export default function MapComponent({
                   <div>
                     <span className="text-[10px] text-slate-500 block uppercase font-bold">{t.fuelTypes[selectedFuelType]}</span>
                     <span className="text-base font-black text-emerald-600">
-                      {formatPrice(st.currentPrice)}
+                      {formatPrice(st.currentPrice, st.currency)}
                     </span>
                   </div>
 

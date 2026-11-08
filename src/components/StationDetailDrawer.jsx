@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { Capacitor } from '@capacitor/core';
 import { translations } from '../i18n/translations';
+import { trackNavigationForReview } from '../services/appInfo';
 import { formatAge, formatPrice, isStale } from '../utils/price';
 
 export default function StationDetailDrawer({
@@ -38,6 +39,7 @@ export default function StationDetailDrawer({
       ? `https://maps.apple.com/?daddr=${station.lat},${station.lng}&dirflg=d`
       : `https://www.google.com/maps/dir/?api=1&destination=${station.lat},${station.lng}`;
     window.open(mapsUrl, '_blank');
+    trackNavigationForReview();
   };
 
   return (
@@ -141,14 +143,14 @@ export default function StationDetailDrawer({
                     {priceObj.self != null && (
                       <div className="text-right">
                         <span className="text-[10px] text-slate-500 block uppercase">{t.serviceMode.self}</span>
-                        <span className="font-black text-emerald-400 text-sm">{formatPrice(priceObj.self)}</span>
+                        <span className="font-black text-emerald-400 text-sm">{formatPrice(priceObj.self, station.currency)}</span>
                       </div>
                     )}
 
                     {priceObj.served != null && (
                       <div className="text-right border-l border-slate-800 pl-3">
                         <span className="text-[10px] text-slate-500 block uppercase">{t.serviceMode.served}</span>
-                        <span className="font-bold text-amber-400 text-sm">{formatPrice(priceObj.served)}</span>
+                        <span className="font-bold text-amber-400 text-sm">{formatPrice(priceObj.served, station.currency)}</span>
                       </div>
                     )}
                   </div>
@@ -159,7 +161,7 @@ export default function StationDetailDrawer({
             {(station.extras || []).map((ex, i) => (
               <div key={`extra-${i}`} className="px-2.5 py-1.5 bg-slate-950/50 rounded-xl border border-slate-800/60 flex items-center justify-between text-[11px]">
                 <span className="text-slate-400">{ex.label} · {ex.self ? t.serviceMode.self : t.serviceMode.served}</span>
-                <span className="font-bold text-slate-300">{formatPrice(ex.price)}</span>
+                <span className="font-bold text-slate-300">{formatPrice(ex.price, station.currency)}</span>
               </div>
             ))}
           </div>

@@ -215,7 +215,8 @@ async function requestTrackingPermission() {
   if (platform !== 'ios') return;
   try {
     await waitUntilActive();
-    for (let waited = 0; waited < 60000; waited += 1000) {
+    // Massimo 10 s: se il popup non compare (succede su alcuni iPhone) non blocchiamo gli annunci per un minuto
+    for (let waited = 0; waited < 10000; waited += 1000) {
       const { status } = await AdMob.trackingAuthorizationStatus();
       if (status !== 'notDetermined') return;
       if (waited === 6000) AdMob.requestTrackingAuthorization().catch(() => {});

@@ -127,7 +127,7 @@ export default function PriceReportModal({ isOpen, onClose, station, onUpdatePri
             <div>
               <label className="block text-xs font-bold text-slate-300 mb-1">{t.modalReport.enterPrice}</label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-xs">€</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-xs">{station.currency === 'RON' ? 'lei' : '€'}</span>
                 <input
                   type="number"
                   step="0.001"

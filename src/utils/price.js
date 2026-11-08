@@ -8,9 +8,26 @@ export function getPrice(station, fuel, mode) {
   return mode === 'served' ? p.served ?? null : p.self ?? p.served ?? null;
 }
 
-export function formatPrice(value) {
-  return value == null ? 'N/A' : `€${value.toFixed(3)}`;
+// Valute delle fonti ufficiali: euro per la maggior parte, lei per la Romania
+const CURRENCIES = {
+  EUR: { prefix: '€', suffix: '', decimals: 3 },
+  RON: { prefix: '', suffix: ' lei', decimals: 2 }
+};
+
+export function formatPrice(value, currency = 'EUR') {
+  if (value == null) return 'N/A';
+  const c = CURRENCIES[currency] || CURRENCIES.EUR;
+  return `${c.prefix}${value.toFixed(c.decimals)}${c.suffix}`;
 }
+
+// Importo (es. costo viaggio, risparmio) con 2 decimali nella valuta indicata
+export function formatAmount(value, currency = 'EUR') {
+  const c = CURRENCIES[currency] || CURRENCIES.EUR;
+  return `${c.prefix}${Number(value).toFixed(2)}${c.suffix}`;
+}
+
+// Valute che l'app sa mostrare: il server invia solo i Paesi con queste valute
+export const SUPPORTED_CURRENCIES = Object.keys(CURRENCIES);
 
 export function ageDays(isoDate) {
   if (!isoDate) return null;

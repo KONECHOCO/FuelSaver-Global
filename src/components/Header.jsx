@@ -10,10 +10,25 @@ import {
   DollarSign,
   Loader2,
   Filter,
-  Crown
+  Crown,
+  Info
 } from 'lucide-react';
 import { translations } from '../i18n/translations';
 import { useMonetization } from '../services/monetization';
+
+// Paesi con prezzi ufficiali; i nomi sono tradotti nella lingua dell'app con Intl.DisplayNames
+const COUNTRIES = [
+  { code: 'IT', flag: '🇮🇹' }, { code: 'FR', flag: '🇫🇷' }, { code: 'ES', flag: '🇪🇸' }, { code: 'DE', flag: '🇩🇪' },
+  { code: 'AT', flag: '🇦🇹' }, { code: 'PT', flag: '🇵🇹' }, { code: 'HR', flag: '🇭🇷' }, { code: 'RO', flag: '🇷🇴' }, { code: 'SI', flag: '🇸🇮' }
+];
+const ALL_COUNTRIES_LABEL = { it: 'Tutti i Paesi', en: 'All countries', es: 'Todos los países', fr: 'Tous les pays', de: 'Alle Länder' };
+function countryName(code, lang) {
+  try {
+    return new Intl.DisplayNames([lang], { type: 'region' }).of(code);
+  } catch {
+    return code;
+  }
+}
 
 export default function Header({
   currentLang,
@@ -25,7 +40,8 @@ export default function Header({
   onLocate,
   onOpenTripCalc,
   onOpenTrends,
-  onOpenMonetizationInfo
+  onOpenMonetizationInfo,
+  onOpenInfo
 }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [isSearching, setIsSearching] = useState(false);
@@ -100,11 +116,10 @@ export default function Header({
                 onChange={(e) => onCountryChange(e.target.value)}
                 className="bg-transparent text-xs font-bold text-slate-200 pr-2 py-1 focus:outline-none cursor-pointer"
               >
-                <option value="ALL" className="bg-slate-900 text-slate-100">🌍 Tutti i Paesi</option>
-                <option value="IT" className="bg-slate-900 text-slate-100">🇮🇹 Italia</option>
-                <option value="ES" className="bg-slate-900 text-slate-100">🇪🇸 Spagna</option>
-                <option value="DE" className="bg-slate-900 text-slate-100">🇩🇪 Germania</option>
-                <option value="FR" className="bg-slate-900 text-slate-100">🇫🇷 Francia</option>
+                <option value="ALL" className="bg-slate-900 text-slate-100">🌍 {ALL_COUNTRIES_LABEL[currentLang] || ALL_COUNTRIES_LABEL.en}</option>
+                {COUNTRIES.map(c => (
+                  <option key={c.code} value={c.code} className="bg-slate-900 text-slate-100">{c.flag} {countryName(c.code, currentLang)}</option>
+                ))}
               </select>
             </div>
 
@@ -160,6 +175,15 @@ export default function Header({
                 <option value="de" className="bg-slate-900 text-slate-100">🇩🇪 DE</option>
               </select>
             </div>
+
+            {/* Info: valutazione, privacy, termini, tutorial */}
+            <button
+              onClick={onOpenInfo}
+              className="p-2 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-xl transition-all active:scale-95"
+              title={t.info.title}
+            >
+              <Info className="w-4 h-4" />
+            </button>
 
           </div>
 

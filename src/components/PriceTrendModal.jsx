@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { X, TrendingUp, PiggyBank } from 'lucide-react';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import { translations } from '../i18n/translations';
-import { getPrice, formatPrice } from '../utils/price';
+import { getPrice, formatPrice, formatAmount } from '../utils/price';
 
 const FUELS = ['petrol', 'diesel', 'lpg', 'methane'];
 
@@ -21,6 +21,8 @@ export default function PriceTrendModal({ isOpen, onClose, stations, selectedSer
   }).filter(Boolean), [stations, selectedServiceMode, t]);
 
   if (!isOpen) return null;
+
+  const currency = stations[0]?.currency || 'EUR';
 
   const main = stats[0];
 
@@ -53,7 +55,7 @@ export default function PriceTrendModal({ isOpen, onClose, stations, selectedSer
                 <div className="p-3.5 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl flex items-start gap-3">
                   <PiggyBank className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
                   <p className="text-xs text-emerald-300 font-semibold leading-relaxed">
-                    {main.label}: {t.trends.fullTankSaving.replace('{x}', `€${((main.max - main.min) * 50).toFixed(2)}`)}
+                    {main.label}: {t.trends.fullTankSaving.replace('{x}', formatAmount((main.max - main.min) * 50, currency))}
                   </p>
                 </div>
               )}
@@ -65,7 +67,7 @@ export default function PriceTrendModal({ isOpen, onClose, stations, selectedSer
                     <XAxis dataKey="label" stroke="#94a3b8" fontSize={11} />
                     <YAxis stroke="#94a3b8" fontSize={11} tickFormatter={v => v.toFixed(2)} />
                     <Tooltip
-                      formatter={v => formatPrice(v)}
+                      formatter={v => formatPrice(v, currency)}
                       contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', fontSize: '12px' }}
                     />
                     <Bar dataKey="min" name={t.trends.min} fill="#10b981" radius={[4, 4, 0, 0]} />
@@ -83,9 +85,9 @@ export default function PriceTrendModal({ isOpen, onClose, stations, selectedSer
                 {stats.map(s => (
                   <React.Fragment key={s.fuel}>
                     <span className="text-slate-300 font-semibold">{s.label} <span className="text-slate-500">({s.count})</span></span>
-                    <span className="text-right text-slate-200">{formatPrice(s.min)}</span>
-                    <span className="text-right text-slate-200">{formatPrice(s.avg)}</span>
-                    <span className="text-right text-slate-200">{formatPrice(s.max)}</span>
+                    <span className="text-right text-slate-200">{formatPrice(s.min, currency)}</span>
+                    <span className="text-right text-slate-200">{formatPrice(s.avg, currency)}</span>
+                    <span className="text-right text-slate-200">{formatPrice(s.max, currency)}</span>
                   </React.Fragment>
                 ))}
               </div>

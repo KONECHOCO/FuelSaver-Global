@@ -10,12 +10,15 @@ import ReviewModal from './components/ReviewModal';
 import PriceTrendModal from './components/PriceTrendModal';
 import ProModal from './components/ProModal';
 import PremiumGateModal from './components/PremiumGateModal';
+import OnboardingModal from './components/OnboardingModal';
+import InfoModal from './components/InfoModal';
 
 import { translations } from './i18n/translations';
 import { fetchStations } from './services/fuelDataService';
 import { getPrice, isStale } from './utils/price';
 import { initMonetization, trackAdAction, isFeatureUnlocked, consentDone } from './services/monetization';
 import { getDevicePosition } from './services/location';
+import { isOnboarded, setOnboarded } from './services/appInfo';
 
 // Contributi dell'utente (segnalazioni prezzo, recensioni) salvati sul dispositivo.
 // TODO: sincronizzarli su un backend con moderazione per condividerli con la community.
@@ -28,8 +31,27 @@ function loadOverlays() {
   }
 }
 
+// Lingua iniziale: scelta salvata dall'utente, altrimenti lingua del dispositivo, altrimenti inglese
+const LANG_KEY = 'fuelsaver_lang';
+function initialLang() {
+  try {
+    const saved = localStorage.getItem(LANG_KEY);
+    if (saved && translations[saved]) return saved;
+  } catch { /* storage non disponibile */ }
+  const prefs = typeof navigator !== 'undefined' ? (navigator.languages?.length ? navigator.languages : [navigator.language]) : [];
+  for (const l of prefs) {
+    const code = String(l || '').slice(0, 2).toLowerCase();
+    if (translations[code]) return code;
+  }
+  return 'en';
+}
+
 export default function App() {
-  const [currentLang, setCurrentLang] = useState('it');
+  const [currentLang, setLang] = useState(initialLang);
+  const setCurrentLang = lang => {
+    setLang(lang);
+    try { localStorage.setItem(LANG_KEY, lang); } catch { /* storage non disponibile */ }
+  };
   const [userPoints, setUserPoints] = useState(350);
   const [selectedCountry, setSelectedCountry] = useState('ALL');
 
@@ -60,6 +82,9 @@ export default function App() {
   const [reviewTargetStation, setReviewTargetStation] = useState(null);
   const [isProOpen, setIsProOpen] = useState(false);
   const [gatedFeature, setGatedFeature] = useState(null);
+  const [isInfoOpen, setIsInfoOpen] = useState(false);
+  // Tutorial mostrato solo al primo avvio (poi richiamabile dal menu Info)
+  const [isOnboardingOpen, setIsOnboardingOpen] = useState(() => !isOnboarded());
 
   const t = translations[currentLang] || translations.en;
 
@@ -285,6 +310,7 @@ export default function App() {
         onOpenTripCalc={() => openFeature('tripCalculator')}
         onOpenTrends={() => openFeature('priceStats')}
         onOpenMonetizationInfo={() => setIsProOpen(true)}
+        onOpenInfo={() => setIsInfoOpen(true)}
       />
 
       {/* Main Grid Workspace Layout */}
@@ -388,6 +414,24 @@ export default function App() {
         onOpenPro={() => {
           setGatedFeature(null);
           setIsProOpen(true);
+        }}
+        currentLang={currentLang}
+      />
+
+      {/* Info: valutazione, privacy, termini, tutorial */}
+      <InfoModal
+        isOpen={isInfoOpen}
+        onClose={() => setIsInfoOpen(false)}
+        onShowTutorial={() => setIsOnboardingOpen(true)}
+        currentLang={currentLang}
+      />
+
+      {/* Tutorial iniziale */}
+      <OnboardingModal
+        isOpen={isOnboardingOpen}
+        onClose={() => {
+          setOnboarded();
+          setIsOnboardingOpen(false);
         }}
         currentLang={currentLang}
       />

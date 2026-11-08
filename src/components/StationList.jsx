@@ -214,7 +214,7 @@ export default function StationList({
                   {/* Price Box */}
                   <div className="text-right shrink-0">
                     <div className={`text-xl font-black tracking-tight ${stale || st.priceSuspect ? 'text-slate-400' : 'text-emerald-400'}`}>
-                      {formatPrice(currentPrice)}
+                      {formatPrice(currentPrice, st.currency)}
                     </div>
                     <span className="text-[10px] font-semibold text-slate-400 block">
                       {t.serviceMode[selectedServiceMode]} · {formatAge(fuelUpdatedAt, t)}

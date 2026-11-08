@@ -25,7 +25,7 @@ export const translations = {
       suspect: "Prezzo anomalo, da verificare",
       loading: "Caricamento prezzi ufficiali...",
       noStations: "Nessun distributore trovato in questo raggio. Prova ad aumentarlo.",
-      unsupported: "Questo paese non è ancora coperto da una fonte ufficiale. Disponibili: Italia, Francia, Spagna, Germania.",
+      unsupported: "Questo paese non è ancora coperto da una fonte ufficiale. Disponibili: Italia, Francia, Spagna, Germania, Austria, Portogallo, Croazia, Romania, Slovenia.",
       officialSource: "Fonte ufficiale",
       stale: "Prezzo non aggiornato da {n} giorni",
       daysAgo: "giorni fa",
@@ -85,6 +85,28 @@ export const translations = {
       viewDetails: "Vedi dettagli",
       calculateTrip: "Calcola Viaggio",
       priceTrends: "Andamento Prezzi"
+    },
+    info: {
+      title: "Info e impostazioni",
+      rate: "Valuta FuelSaver",
+      rateHint: "Ti piace l’app? Lascia una valutazione: ci aiuta molto!",
+      privacy: "Informativa sulla privacy",
+      terms: "Termini di servizio",
+      tutorial: "Rivedi il tutorial",
+      contact: "Contattaci",
+      sources: "Prezzi da fonti ufficiali: MIMIT, prix-carburants.gouv.fr, MITECO, Tankerkönig, E-Control, DGEG, mzoe-gor.hr, Monitorul Prețurilor, goriva.si",
+      version: "Versione"
+    },
+    onboarding: {
+      skip: "Salta",
+      next: "Avanti",
+      start: "Inizia",
+      s1Title: "Prezzi ufficiali, in tempo reale",
+      s1Text: "I prezzi arrivano direttamente dai enti ufficiali di Italia, Francia, Spagna, Germania, Austria, Portogallo, Croazia, Romania e Slovenia. Ogni prezzo mostra quando è stato aggiornato.",
+      s2Title: "Trova il distributore più economico",
+      s2Text: "Scegli carburante e raggio: la lista è ordinata dal prezzo più basso. I prezzi vecchi o anomali vengono segnalati.",
+      s3Title: "Naviga e risparmia",
+      s3Text: "Tocca un distributore per i dettagli e la navigazione. Usa il calcolatore viaggio e le statistiche per sapere quanto risparmi."
     },
     drawer: {
       back: "Indietro",
@@ -170,7 +192,7 @@ export const translations = {
       suspect: "Unusual price, please verify",
       loading: "Loading official prices...",
       noStations: "No stations found in this radius. Try increasing it.",
-      unsupported: "This country is not yet covered by an official source. Available: Italy, France, Spain, Germany.",
+      unsupported: "This country is not yet covered by an official source. Available: Italy, France, Spain, Germany, Austria, Portugal, Croatia, Romania, Slovenia.",
       officialSource: "Official source",
       stale: "Price not updated for {n} days",
       daysAgo: "days ago",
@@ -230,6 +252,28 @@ export const translations = {
       viewDetails: "View Details",
       calculateTrip: "Trip Calculator",
       priceTrends: "Price Trends"
+    },
+    info: {
+      title: "Info & settings",
+      rate: "Rate FuelSaver",
+      rateHint: "Enjoying the app? A rating helps us a lot!",
+      privacy: "Privacy Policy",
+      terms: "Terms of Service",
+      tutorial: "Show the tutorial again",
+      contact: "Contact us",
+      sources: "Prices from official sources: MIMIT, prix-carburants.gouv.fr, MITECO, Tankerkönig, E-Control, DGEG, mzoe-gor.hr, Monitorul Prețurilor, goriva.si",
+      version: "Version"
+    },
+    onboarding: {
+      skip: "Skip",
+      next: "Next",
+      start: "Get started",
+      s1Title: "Official prices, in real time",
+      s1Text: "Prices come straight from the governments of Italy, France, Spain, Germany, Austria, Portugal, Croatia, Romania and Slovenia. Every price shows when it was last updated.",
+      s2Title: "Find the cheapest station",
+      s2Text: "Pick your fuel and radius: the list is sorted from the lowest price. Outdated or unusual prices are flagged.",
+      s3Title: "Navigate and save",
+      s3Text: "Tap a station for details and directions. Use the trip calculator and area statistics to see how much you save."
     },
     drawer: {
       back: "Back",
@@ -315,7 +359,7 @@ export const translations = {
       suspect: "Precio anómalo, por verificar",
       loading: "Cargando precios oficiales...",
       noStations: "No hay gasolineras en este radio. Prueba a ampliarlo.",
-      unsupported: "Este país aún no tiene una fuente oficial. Disponibles: Italia, Francia, España, Alemania.",
+      unsupported: "Este país aún no tiene una fuente oficial. Disponibles: Italia, Francia, España, Alemania, Austria, Portugal, Croacia, Rumanía, Eslovenia.",
       officialSource: "Fuente oficial",
       stale: "Precio sin actualizar desde hace {n} días",
       daysAgo: "días",
@@ -375,6 +419,28 @@ export const translations = {
       viewDetails: "Ver detalles",
       calculateTrip: "Calcular Viaje",
       priceTrends: "Tendencia de Precios"
+    },
+    info: {
+      title: "Información y ajustes",
+      rate: "Valora FuelSaver",
+      rateHint: "¿Te gusta la app? ¡Tu valoración nos ayuda mucho!",
+      privacy: "Política de privacidad",
+      terms: "Términos del servicio",
+      tutorial: "Ver el tutorial de nuevo",
+      contact: "Contáctanos",
+      sources: "Precios de fuentes oficiales: MIMIT, prix-carburants.gouv.fr, MITECO, Tankerkönig, E-Control, DGEG, mzoe-gor.hr, Monitorul Prețurilor, goriva.si",
+      version: "Versión"
+    },
+    onboarding: {
+      skip: "Saltar",
+      next: "Siguiente",
+      start: "Empezar",
+      s1Title: "Precios oficiales, en tiempo real",
+      s1Text: "Los precios llegan directamente de los organismos oficiales de España, Italia, Francia, Alemania, Austria, Portugal, Croacia, Rumanía y Eslovenia. Cada precio indica cuándo se actualizó.",
+      s2Title: "Encuentra la gasolinera más barata",
+      s2Text: "Elige combustible y radio: la lista se ordena del precio más bajo. Los precios antiguos o anómalos se señalan.",
+      s3Title: "Navega y ahorra",
+      s3Text: "Toca una gasolinera para ver detalles y cómo llegar. Usa la calculadora de viaje y las estadísticas para ver cuánto ahorras."
     },
     drawer: {
       back: "Atrás",
@@ -460,7 +526,7 @@ export const translations = {
       suspect: "Prix inhabituel, à vérifier",
       loading: "Chargement des prix officiels...",
       noStations: "Aucune station dans ce rayon. Essayez de l’agrandir.",
-      unsupported: "Ce pays n’est pas encore couvert par une source officielle. Disponibles : Italie, France, Espagne, Allemagne.",
+      unsupported: "Ce pays n’est pas encore couvert par une source officielle. Disponibles : Italie, France, Espagne, Allemagne, Autriche, Portugal, Croatie, Roumanie, Slovénie.",
       officialSource: "Source officielle",
       stale: "Prix non mis à jour depuis {n} jours",
       daysAgo: "jours",
@@ -520,6 +586,28 @@ export const translations = {
       viewDetails: "Voir détails",
       calculateTrip: "Calculer Trajet",
       priceTrends: "Tendance des Prix"
+    },
+    info: {
+      title: "Infos et réglages",
+      rate: "Noter FuelSaver",
+      rateHint: "Vous aimez l’app ? Une note nous aide beaucoup !",
+      privacy: "Politique de confidentialité",
+      terms: "Conditions d’utilisation",
+      tutorial: "Revoir le tutoriel",
+      contact: "Nous contacter",
+      sources: "Prix de sources officielles : MIMIT, prix-carburants.gouv.fr, MITECO, Tankerkönig, E-Control, DGEG, mzoe-gor.hr, Monitorul Prețurilor, goriva.si",
+      version: "Version"
+    },
+    onboarding: {
+      skip: "Passer",
+      next: "Suivant",
+      start: "Commencer",
+      s1Title: "Prix officiels, en temps réel",
+      s1Text: "Les prix viennent directement des organismes officiels de France, d’Italie, d’Espagne, d’Allemagne, d’Autriche, du Portugal, de Croatie, de Roumanie et de Slovénie. Chaque prix indique sa date de mise à jour.",
+      s2Title: "Trouvez la station la moins chère",
+      s2Text: "Choisissez le carburant et le rayon : la liste est triée du prix le plus bas. Les prix anciens ou anormaux sont signalés.",
+      s3Title: "Naviguez et économisez",
+      s3Text: "Touchez une station pour les détails et l’itinéraire. Le calculateur de trajet et les statistiques montrent combien vous économisez."
     },
     drawer: {
       back: "Retour",
@@ -605,7 +693,7 @@ export const translations = {
       suspect: "Ungewöhnlicher Preis, bitte prüfen",
       loading: "Offizielle Preise werden geladen...",
       noStations: "Keine Tankstellen in diesem Radius. Radius vergrößern.",
-      unsupported: "Für dieses Land gibt es noch keine offizielle Quelle. Verfügbar: Italien, Frankreich, Spanien, Deutschland.",
+      unsupported: "Für dieses Land gibt es noch keine offizielle Quelle. Verfügbar: Italien, Frankreich, Spanien, Deutschland, Österreich, Portugal, Kroatien, Rumänien, Slowenien.",
       officialSource: "Offizielle Quelle",
       stale: "Preis seit {n} Tagen nicht aktualisiert",
       daysAgo: "Tagen",
@@ -665,6 +753,28 @@ export const translations = {
       viewDetails: "Details Ansehen",
       calculateTrip: "Fahrtkosten Rechner",
       priceTrends: "Preisentwicklung"
+    },
+    info: {
+      title: "Infos & Einstellungen",
+      rate: "FuelSaver bewerten",
+      rateHint: "Gefällt dir die App? Eine Bewertung hilft uns sehr!",
+      privacy: "Datenschutzerklärung",
+      terms: "Nutzungsbedingungen",
+      tutorial: "Tutorial erneut anzeigen",
+      contact: "Kontakt",
+      sources: "Preise aus offiziellen Quellen: MIMIT, prix-carburants.gouv.fr, MITECO, Tankerkönig, E-Control, DGEG, mzoe-gor.hr, Monitorul Prețurilor, goriva.si",
+      version: "Version"
+    },
+    onboarding: {
+      skip: "Überspringen",
+      next: "Weiter",
+      start: "Los geht’s",
+      s1Title: "Offizielle Preise in Echtzeit",
+      s1Text: "Die Preise kommen direkt von den Behörden in Deutschland, Österreich, Italien, Frankreich, Spanien, Portugal, Kroatien, Rumänien und Slowenien. Jeder Preis zeigt, wann er aktualisiert wurde.",
+      s2Title: "Finde die günstigste Tankstelle",
+      s2Text: "Wähle Kraftstoff und Radius: Die Liste ist nach dem niedrigsten Preis sortiert. Veraltete oder ungewöhnliche Preise werden markiert.",
+      s3Title: "Navigieren und sparen",
+      s3Text: "Tippe auf eine Tankstelle für Details und Route. Reiserechner und Statistik zeigen, wie viel du sparst."
     },
     drawer: {
       back: "Zurück",

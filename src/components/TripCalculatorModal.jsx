@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { X, Navigation, Fuel, DollarSign, Sparkles, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { translations } from '../i18n/translations';
-import { getPrice } from '../utils/price';
+import { getPrice, formatAmount } from '../utils/price';
 
 async function geocode(query) {
   const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(query)}`);
@@ -65,6 +65,7 @@ export default function TripCalculatorModal({ isOpen, onClose, stations, current
       litersNeeded: litersNeeded.toFixed(1),
       totalCost: totalCost.toFixed(2),
       savings: savings.toFixed(2),
+      currency: bestStation.currency || 'EUR',
       bestStation
     });
   };
@@ -159,14 +160,14 @@ export default function TripCalculatorModal({ isOpen, onClose, stations, current
             <div className="flex items-center justify-between">
               <span className="text-xs text-slate-400 font-bold">{t.tripCalculator.resultTitle}:</span>
               <span className="text-xs text-emerald-400 font-extrabold bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/30">
-                🎉 {t.tripCalculator.savingsMsg} €{result.savings}
+                🎉 {t.tripCalculator.savingsMsg} {formatAmount(result.savings, result.currency)}
               </span>
             </div>
 
             <div className="flex items-center justify-between p-3 bg-slate-900 rounded-2xl border border-slate-800">
               <div>
                 <span className="text-[11px] text-slate-400 block">{t.tripCalculator.estimatedCost}</span>
-                <span className="text-2xl font-black text-white">€{result.totalCost}</span>
+                <span className="text-2xl font-black text-white">{formatAmount(result.totalCost, result.currency)}</span>
               </div>
               <div className="text-right">
                 <span className="text-[11px] text-slate-400 block">Distanza & Carburante</span>
