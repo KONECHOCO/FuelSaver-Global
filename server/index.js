@@ -5,9 +5,13 @@ import { italy } from './providers/italy.js';
 import { france } from './providers/france.js';
 import { spain } from './providers/spain.js';
 import { germany } from './providers/germany.js';
+import { austria } from './providers/austria.js';
+import { portugal } from './providers/portugal.js';
+import { croatia } from './providers/croatia.js';
+import { romania } from './providers/romania.js';
 
 // Solo fonti ufficiali/governative: nessun prezzo inventato o stimato
-const PROVIDERS = [italy, france, spain, germany];
+const PROVIDERS = [italy, france, spain, germany, austria, portugal, croatia, romania];
 const MAX_RESULTS = 250;
 
 const app = express();
@@ -27,7 +31,10 @@ app.get('/api/stations', async (req, res) => {
   }
 
   // Vicino ai confini (es. Ventimiglia/Mentone) interroghiamo più paesi e uniamo i risultati
-  const active = PROVIDERS.filter(p => inBox(lat, lng, p.bbox));
+  // I client fino alla 1.0.1 mostrano sempre "€": i Paesi con altra valuta arrivano solo a chi la dichiara
+  // (es. ?currencies=EUR,RON). Senza parametro restano solo le fonti in euro.
+  const currencies = new Set(String(req.query.currencies || 'EUR').toUpperCase().split(','));
+  const active = PROVIDERS.filter(p => inBox(lat, lng, p.bbox) && currencies.has(p.currency || 'EUR'));
   const settled = await Promise.allSettled(active.map(p => p.query(lat, lng, radius)));
 
   const stations = [];
@@ -35,8 +42,8 @@ app.get('/api/stations', async (req, res) => {
   settled.forEach((r, i) => {
     const p = active[i];
     if (r.status === 'fulfilled') {
-      stations.push(...r.value.map(s => ({ ...s, source: p.source })));
-      sources.push({ country: p.country, source: p.source, license: p.license, count: r.value.length });
+      stations.push(...r.value.map(s => ({ ...s, currency: p.currency || 'EUR', source: p.source })));
+      sources.push({ country: p.country, currency: p.currency || 'EUR', source: p.source, license: p.license, count: r.value.length });
     } else {
       console.error(`❌ [${p.country}] Query fallita:`, r.reason?.message);
       sources.push({ country: p.country, source: p.source, error: true });

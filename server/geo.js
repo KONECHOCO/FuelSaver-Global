@@ -18,9 +18,10 @@ export function inBox(lat, lng, [minLat, maxLat, minLng, maxLng]) {
   return lat >= minLat && lat <= maxLat && lng >= minLng && lng <= maxLng;
 }
 
-// Aggiunge/aggiorna un prezzo tenendo quello comunicato più di recente
-export function setPrice(prices, fuel, mode, price, updatedAt) {
-  if (!(price > 0.2 && price < 5)) return;
+// Aggiunge/aggiorna un prezzo tenendo quello comunicato più di recente.
+// [min, max] = intervallo plausibile per litro nella valuta della fonte (default euro)
+export function setPrice(prices, fuel, mode, price, updatedAt, [min, max] = [0.2, 5]) {
+  if (!(price > min && price < max)) return;
   const entry = prices[fuel] || (prices[fuel] = { self: null, served: null, updatedAt: null });
   const prevAt = entry[`${mode}At`];
   if (entry[mode] == null || !prevAt || (updatedAt && updatedAt > prevAt)) {
