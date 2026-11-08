@@ -34,7 +34,7 @@ app.get('/api/stations', async (req, res) => {
   // I client fino alla 1.0.1 mostrano sempre "€": i Paesi con altra valuta arrivano solo a chi la dichiara
   // (es. ?currencies=EUR,RON). Senza parametro restano solo le fonti in euro.
   const currencies = new Set(String(req.query.currencies || 'EUR').toUpperCase().split(','));
-  const active = PROVIDERS.filter(p => inBox(lat, lng, p.bbox) && currencies.has(p.currency || 'EUR'));
+  const active = PROVIDERS.filter(p => inBox(lat, lng, p.bbox) && currencies.has(p.currency || 'EUR') && (!p.enabled || p.enabled()));
   const settled = await Promise.allSettled(active.map(p => p.query(lat, lng, radius)));
 
   const stations = [];

@@ -23,6 +23,8 @@ export const croatia = {
   bbox: [42.3, 46.6, 13.4, 19.5],
   init,
   query,
+  // Senza anagrafica (es. fonte irraggiungibile dal server) il Paese risulta non coperto invece che vuoto
+  enabled: () => stations.length > 0,
   status: () => ({ stations: stations.length, fetchedAt, cachedPrices: priceCache.size })
 };
 
@@ -34,6 +36,8 @@ const priceCache = new Map(); // station id -> { at, prices, extras }
 async function init() {
   await syncList();
   setInterval(syncList, LIST_REFRESH_MS);
+  // Finché l'anagrafica manca riprova ogni ora
+  setInterval(() => { if (!stations.length) syncList(); }, 60 * 60 * 1000);
 }
 
 // Nel file statico "lat" e "long" sono invertiti per molti impianti: li riconosciamo dall'intervallo
