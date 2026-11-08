@@ -9,9 +9,10 @@ import { austria } from './providers/austria.js';
 import { portugal } from './providers/portugal.js';
 import { croatia } from './providers/croatia.js';
 import { romania } from './providers/romania.js';
+import { slovenia } from './providers/slovenia.js';
 
 // Solo fonti ufficiali/governative: nessun prezzo inventato o stimato
-const PROVIDERS = [italy, france, spain, germany, austria, portugal, croatia, romania];
+const PROVIDERS = [italy, france, spain, germany, austria, portugal, croatia, romania, slovenia];
 const MAX_RESULTS = 250;
 
 const app = express();
