@@ -18,9 +18,11 @@ import {
   BannerAdPluginEvents,
   BannerAdPosition,
   BannerAdSize,
+  InterstitialAdPluginEvents,
   RewardAdPluginEvents
 } from '@capacitor-community/admob';
 import { NativePurchases, PURCHASE_TYPE } from '@capgo/native-purchases';
+import { trackClick, trackImpression, trackPurchase, trackRevenue } from './referral';
 
 export const PRO_PRODUCT_ID = 'fuelsaver_pro';
 
@@ -285,6 +287,15 @@ export async function initMonetization() {
     loadAppOpen();
   });
 
+  // Programma ambasciatori: conta gli annunci visti dagli utenti invitati (fanno nulla per gli altri).
+  // L'evento "paid" del banner porta il valore stimato dell'impression; gli altri formati non lo espongono.
+  AdMob.addListener(BannerAdPluginEvents.AdImpression, () => trackImpression());
+  AdMob.addListener(BannerAdPluginEvents.AdPaid, data => trackRevenue(data?.valueMicros));
+  AdMob.addListener(BannerAdPluginEvents.Opened, () => trackClick());
+  AdMob.addListener(AppOpenAdPluginEvents.AdImpression, data => trackImpression(data?.valueMicros));
+  AdMob.addListener(InterstitialAdPluginEvents.AdImpression, data => trackImpression(data?.valueMicros));
+  AdMob.addListener(RewardAdPluginEvents.AdImpression, data => trackImpression(data?.valueMicros));
+
   // 1) Video appena si apre l'app, 2) banner fisso, 3) precarico interstitial e video premio
   await showAppOpen();
   showBanner();
@@ -395,7 +406,10 @@ export async function buyPro() {
     productType: PURCHASE_TYPE.INAPP,
     quantity: 1
   });
-  if (tx?.productIdentifier === PRO_PRODUCT_ID) setPro(true);
+  if (tx?.productIdentifier === PRO_PRODUCT_ID) {
+    setPro(true);
+    trackPurchase();
+  }
   return state.isPro;
 }
 

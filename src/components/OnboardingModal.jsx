@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { BadgeCheck, TrendingDown, Navigation } from 'lucide-react';
 import { translations } from '../i18n/translations';
+import ReferralCodeForm from './ReferralCodeForm';
+import { useReferral, canEnterCode } from '../services/referral';
 
 const STEPS = [
   { icon: BadgeCheck, color: 'from-emerald-500 to-teal-400', title: 's1Title', text: 's1Text' },
@@ -10,7 +12,10 @@ const STEPS = [
 
 export default function OnboardingModal({ isOpen, onClose, currentLang }) {
   const [step, setStep] = useState(0);
+  const [showCode, setShowCode] = useState(false);
+  const ref = useReferral();
   const t = (translations[currentLang] || translations.en).onboarding;
+  const tr = (translations[currentLang] || translations.en).referral;
 
   if (!isOpen) return null;
 
@@ -53,6 +58,17 @@ export default function OnboardingModal({ isOpen, onClose, currentLang }) {
           >
             {last ? t.start : t.next}
           </button>
+          {last && (ref.code || canEnterCode(ref)) && (
+            <div className="mt-4">
+              {showCode || ref.code ? (
+                <ReferralCodeForm currentLang={currentLang} compact />
+              ) : (
+                <button onClick={() => setShowCode(true)} className="w-full text-xs font-semibold text-slate-400 hover:text-emerald-300">
+                  {tr.question}
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>

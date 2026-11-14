@@ -108,6 +108,17 @@ export const translations = {
       s3Title: "Naviga e risparmia",
       s3Text: "Tocca un distributore per i dettagli e la navigazione. Usa il calcolatore viaggio e le statistiche per sapere quanto risparmi."
     },
+    referral: {
+      question: "Hai un codice invito?",
+      title: "Codice invito",
+      placeholder: "Es. AMADOU123",
+      apply: "Applica",
+      applied: "Codice invito applicato:",
+      invalid: "Codice non valido. Controlla e riprova.",
+      network: "Connessione assente. Riprova tra poco.",
+      expired: "Il codice invito si può inserire solo nei primi 7 giorni dall’installazione.",
+      hint: "Se qualcuno ti ha consigliato FuelSaver, inserisci il suo codice: non cambia nulla per te e non raccogliamo dati personali."
+    },
     drawer: {
       back: "Indietro",
       title: "Dettaglio Distributore",
@@ -274,6 +285,17 @@ export const translations = {
       s2Text: "Pick your fuel and radius: the list is sorted from the lowest price. Outdated or unusual prices are flagged.",
       s3Title: "Navigate and save",
       s3Text: "Tap a station for details and directions. Use the trip calculator and area statistics to see how much you save."
+    },
+    referral: {
+      question: "Have an invitation code?",
+      title: "Invitation code",
+      placeholder: "E.g. AMADOU123",
+      apply: "Apply",
+      applied: "Invitation code applied:",
+      invalid: "Invalid code. Please check and try again.",
+      network: "No connection. Please try again shortly.",
+      expired: "An invitation code can only be entered within 7 days of installing.",
+      hint: "If someone recommended FuelSaver to you, enter their code: nothing changes for you and we collect no personal data."
     },
     drawer: {
       back: "Back",
@@ -442,6 +464,17 @@ export const translations = {
       s3Title: "Navega y ahorra",
       s3Text: "Toca una gasolinera para ver detalles y cómo llegar. Usa la calculadora de viaje y las estadísticas para ver cuánto ahorras."
     },
+    referral: {
+      question: "¿Tienes un código de invitación?",
+      title: "Código de invitación",
+      placeholder: "Ej. AMADOU123",
+      apply: "Aplicar",
+      applied: "Código de invitación aplicado:",
+      invalid: "Código no válido. Revísalo e inténtalo de nuevo.",
+      network: "Sin conexión. Inténtalo de nuevo en un momento.",
+      expired: "El código de invitación solo se puede introducir en los primeros 7 días tras la instalación.",
+      hint: "Si alguien te recomendó FuelSaver, introduce su código: para ti no cambia nada y no recopilamos datos personales."
+    },
     drawer: {
       back: "Atrás",
       title: "Detalles de la Gasolinera",
@@ -609,6 +642,17 @@ export const translations = {
       s3Title: "Naviguez et économisez",
       s3Text: "Touchez une station pour les détails et l’itinéraire. Le calculateur de trajet et les statistiques montrent combien vous économisez."
     },
+    referral: {
+      question: "Tu as un code d’invitation ?",
+      title: "Code d’invitation",
+      placeholder: "Ex. AMADOU123",
+      apply: "Valider",
+      applied: "Code d’invitation appliqué :",
+      invalid: "Code invalide. Vérifie et réessaie.",
+      network: "Pas de connexion. Réessaie dans un instant.",
+      expired: "Le code d’invitation ne peut être saisi que dans les 7 jours suivant l’installation.",
+      hint: "Si quelqu’un t’a recommandé FuelSaver, saisis son code : rien ne change pour toi et nous ne collectons aucune donnée personnelle."
+    },
     drawer: {
       back: "Retour",
       title: "Détails de la Station",
@@ -775,6 +819,17 @@ export const translations = {
       s2Text: "Wähle Kraftstoff und Radius: Die Liste ist nach dem niedrigsten Preis sortiert. Veraltete oder ungewöhnliche Preise werden markiert.",
       s3Title: "Navigieren und sparen",
       s3Text: "Tippe auf eine Tankstelle für Details und Route. Reiserechner und Statistik zeigen, wie viel du sparst."
+    },
+    referral: {
+      question: "Hast du einen Einladungscode?",
+      title: "Einladungscode",
+      placeholder: "z. B. AMADOU123",
+      apply: "Einlösen",
+      applied: "Einladungscode eingelöst:",
+      invalid: "Ungültiger Code. Bitte prüfen und erneut versuchen.",
+      network: "Keine Verbindung. Bitte gleich erneut versuchen.",
+      expired: "Ein Einladungscode kann nur in den ersten 7 Tagen nach der Installation eingegeben werden.",
+      hint: "Wenn dir jemand FuelSaver empfohlen hat, gib seinen Code ein: Für dich ändert sich nichts und wir erfassen keine persönlichen Daten."
     },
     drawer: {
       back: "Zurück",

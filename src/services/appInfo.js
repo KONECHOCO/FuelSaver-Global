@@ -8,7 +8,7 @@ import { InAppReview } from '@capacitor-community/in-app-review';
 
 export const PRIVACY_URL = 'https://konechoco.github.io/fuelsaver/privacy-policy.html';
 export const TERMS_URL = 'https://konechoco.github.io/fuelsaver/terms.html';
-export const APP_VERSION = '1.0.2';
+export const APP_VERSION = '1.0.3';
 
 const STORE_URLS = {
   android: 'https://play.google.com/store/apps/details?id=com.ikonet.fuelsaver',

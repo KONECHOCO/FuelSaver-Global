@@ -2,9 +2,12 @@ import React from 'react';
 import { X, Star, Shield, FileText, BookOpen, Mail, Info } from 'lucide-react';
 import { translations } from '../i18n/translations';
 import { rateApp, openExternal, PRIVACY_URL, TERMS_URL, APP_VERSION } from '../services/appInfo';
+import ReferralCodeForm from './ReferralCodeForm';
+import { useReferral, canEnterCode } from '../services/referral';
 
 export default function InfoModal({ isOpen, onClose, onShowTutorial, currentLang }) {
   const t = (translations[currentLang] || translations.en).info;
+  const ref = useReferral();
 
   if (!isOpen) return null;
 
@@ -39,6 +42,12 @@ export default function InfoModal({ isOpen, onClose, onShowTutorial, currentLang
               <span className="block text-xs text-amber-100/80">{t.rateHint}</span>
             </span>
           </button>
+
+          {ref.enabled && (ref.code || canEnterCode(ref)) && (
+            <div className="rounded-2xl border border-slate-800 p-4">
+              <ReferralCodeForm currentLang={currentLang} />
+            </div>
+          )}
 
           <div className="rounded-2xl border border-slate-800 divide-y divide-slate-800 overflow-hidden">
             {items.map(({ icon: Icon, label, action }) => (

@@ -19,6 +19,7 @@ import { getPrice, isStale } from './utils/price';
 import { initMonetization, trackAdAction, isFeatureUnlocked, consentDone } from './services/monetization';
 import { getDevicePosition } from './services/location';
 import { isOnboarded, setOnboarded } from './services/appInfo';
+import { initReferral } from './services/referral';
 
 // Contributi dell'utente (segnalazioni prezzo, recensioni) salvati sul dispositivo.
 // TODO: sincronizzarli su un backend con moderazione per condividerli con la community.
@@ -91,6 +92,8 @@ export default function App() {
   // Pubblicità (video all'apertura + banner) e verifica acquisto Pro
   useEffect(() => {
     initMonetization().catch(err => console.warn('Monetization init failed', err));
+    // Programma ambasciatori: invia dati solo se l'utente è arrivato da un invito
+    initReferral().catch(err => console.warn('Referral init failed', err));
   }, []);
 
   // Funzioni premium: sbloccate da Pro o da un video premio (24 h)
